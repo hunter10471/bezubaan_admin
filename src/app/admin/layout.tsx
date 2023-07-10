@@ -1,5 +1,4 @@
 import Sidebar from '@/components/sidebar/Sidebar';
-import './globals.css';
 import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
@@ -18,6 +17,7 @@ export default function RootLayout({
 		<html lang='en'>
 			<body className={roboto.className}>
 				<div className='flex'>
+					<Sidebar />
 					<div className='w-full min-h-screen bg-neutral-200 text-neutral-800'>
 						{children}
 					</div>

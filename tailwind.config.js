@@ -19,6 +19,9 @@ module.exports = {
 				accent: '#DA6525',
 				lightBlack: '#454545',
 			},
+			backgroundImage: {
+				'login-background': "url('/assets/login-background.jpg')",
+			},
 		},
 	},
 };
