@@ -8,14 +8,14 @@ import { usePathname } from 'next/navigation';
 
 const Sidebar = () => {
 	const pathname = usePathname();
-	const [currentPath, setCurrentPath] = useState('');
+	const [currentPath, setCurrentPath] = useState('/Admin/Dashboard');
 	useEffect(() => {
-		if (currentPath !== '') {
-			setCurrentPath(pathname.split('/')[0]);
+		if (currentPath !== '' && pathname) {
+			setCurrentPath(pathname.split('/')[2]);
 		}
 	}, [pathname, currentPath]);
 	return (
-		<aside className='w-[250px] p-6 bg-white min-h-screen'>
+		<div className='w-[250px] p-6 bg-white min-h-screen'>
 			<Logo />
 			<ul className='my-10'>
 				{SidebarItems.map((item) =>
@@ -31,7 +31,7 @@ const Sidebar = () => {
 					)
 				)}
 			</ul>
-		</aside>
+		</div>
 	);
 };
 

@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Pet {
+model pets {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   v          Int      @map("__v")
   age        Int
@@ -19,28 +19,28 @@ model Pet {
   ownerId      String   @db.ObjectId
   species    String
   updatedAt  DateTime @db.Date
-  owner User @relation(fields: [ownerId], references: [id], onDelete:Cascade)
+  owner users @relation(fields: [ownerId], references: [id], onDelete:Cascade)
 }
 
-model User {
+model users {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   v         Int      @map("__v")
   createdAt DateTime @db.Date
-  email     String
+  email     String   @unique
   gender    String
   isAdmin   Boolean
   password  String
   updatedAt DateTime @db.Date
   username  String   @unique(map: "username_1")
-  pets      Pet[]
+  pets      pets[]
 }
 
-model Vet {
+model vets {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   v                 Int      @map("__v")
   createdAt         DateTime @db.Date
   degreeImage       String
-  email             String
+  email             String   @unique
   fieldOfStudy      String
   gender            String
   isApproved        Boolean

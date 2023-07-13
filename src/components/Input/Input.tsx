@@ -1,21 +1,30 @@
 'use client';
 import React, { useState } from 'react';
+import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface InputProps {
+	id: string;
 	placeholder: string;
 	label: string;
 	required?: boolean;
 	icon?: React.ReactNode;
 	type: 'email' | 'password' | 'text';
+	disabled?: boolean;
+	register: UseFormRegister<FieldValues>;
+	errors: FieldErrors;
 }
 
 const Input: React.FC<InputProps> = ({
+	id,
 	placeholder,
 	label,
 	required,
 	icon: Icon,
 	type,
+	disabled,
+	register,
+	errors,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
@@ -29,6 +38,7 @@ const Input: React.FC<InputProps> = ({
 					{Icon}
 				</span>
 				<input
+					{...register(id, { required })}
 					className={` ${
 						Icon ? 'pr-2 pl-8' : 'px-4'
 					} py-1 focus:outline-none transition focus:border-primary border-b-[1px] border-neutral-300`}
