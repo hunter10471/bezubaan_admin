@@ -9,9 +9,9 @@ export default async function Signin() {
 	return (
 		<div className='flex h-full items-center justify-center bg-login-background '>
 			<div className='absolute h-full w-full bg-black/25 top-0'></div>
-			<div className='flex items-center p-16 bg-white rounded-xl gap-[50px] shadow-xl z-10'>
+			<div className='flex items-center px-16 py-10 bg-white rounded-xl gap-16 shadow-xl z-10'>
 				<Logo large />
-				<hr />
+				<span className='h-[350px] border-[1px] border-neutral-200'></span>
 				<div>
 					<Heading title='Welcome back' />
 					<Input
