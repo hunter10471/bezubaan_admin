@@ -1,3 +1,4 @@
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
 import { IconType } from 'react-icons';
@@ -14,7 +15,10 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 	isActive,
 }) => {
 	return (
-		<Link href={`${title}`}>
+		<Link
+			onClick={() => (title === 'Logout' ? signOut() : undefined)}
+			href={title === 'Logout' ? '' : `${title}`}
+		>
 			<div
 				className={`my-2 p-2 rounded-xl flex gap-2 items-center text-sm hover:bg-neutral-100 cursor-pointer ${
 					isActive ? 'bg-neutral-100 font-medium' : 'text-neutral-400'

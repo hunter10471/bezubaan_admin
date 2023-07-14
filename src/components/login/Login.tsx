@@ -46,7 +46,7 @@ const Login = () => {
 			<div className='flex items-center px-16 py-10 bg-white rounded-xl gap-16 shadow-xl z-10'>
 				<Logo large />
 				<span className='h-[350px] border-[1px] border-neutral-200'></span>
-				<div>
+				<form>
 					<Heading title='Welcome back' />
 					<Input
 						id='email'
@@ -73,7 +73,7 @@ const Login = () => {
 						onClick={handleSubmit(onSubmit)}
 						title='Login'
 					/>
-				</div>
+				</form>
 			</div>
 		</div>
 	);

@@ -23,7 +23,6 @@ export const authOptions: AuthOptions = {
 						email: credentials.email,
 					},
 				});
-				console.log(user, credentials);
 				if (!user || !user.password) {
 					throw new Error('Invalid credentials');
 				}
