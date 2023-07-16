@@ -20,9 +20,7 @@ export default function RootLayout({
 			<body className={roboto.className}>
 				<ToasterProvider />
 				<div className='flex'>
-					<div className='w-full min-h-screen bg-neutral-200 text-neutral-800'>
-						{children}
-					</div>
+					<div className='w-full min-h-screen text-neutral-800'>{children}</div>
 				</div>
 			</body>
 		</html>

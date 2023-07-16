@@ -7,6 +7,10 @@ interface ButtonProps {
 	onClick: () => void;
 	disabled?: boolean;
 	isLoading?: boolean;
+	icon?: JSX.Element;
+	dark?: boolean;
+	darkOutline?: boolean;
+	className?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,16 +19,26 @@ const Button: React.FC<ButtonProps> = ({
 	onClick,
 	disabled,
 	isLoading,
+	icon,
+	dark,
+	className,
+	darkOutline,
 }) => {
 	return (
 		<button
 			disabled={disabled || isLoading}
 			onClick={onClick}
-			className={` my-2 px-8 py-2 no_highlights ${
+			className={`flex items-center my-2 px-8 py-2 gap-2 no_highlights ${
 				outline
-					? 'text-primary hover:text-heading border-2 border-primary hover:border-heading disabled:cursor-not-allowed'
+					? 'text-primary hover:text-heading border-2 border-primary hover:border-heading '
 					: 'text-white bg-primary hover:bg-heading'
-			} rounded transition capitalize font-medium `}
+			} rounded-lg transition capitalize font-medium disabled:cursor-not-allowed ${
+				dark ? 'bg-neutral-800 text-white hover:bg-neutral-700' : ''
+			} ${
+				darkOutline
+					? 'border-2 bg-white text-neutral-800 hover:text-neutral-700 border-neutral-800 hover:border-neutral-700'
+					: ''
+			} ${className} `}
 		>
 			{isLoading ? (
 				<ClipLoader
@@ -33,7 +47,10 @@ const Button: React.FC<ButtonProps> = ({
 					color={outline ? '#40B37C' : '#fff'}
 				/>
 			) : (
-				title
+				<>
+					<span className='ml-[-10px]'>{icon} </span>
+					{title}
+				</>
 			)}
 		</button>
 	);

@@ -16,7 +16,7 @@ model pets {
   gender     String
   image      String
   name       String
-  ownerId      String   @db.ObjectId
+  ownerId    String   @db.ObjectId
   species    String
   updatedAt  DateTime @db.Date
   owner users @relation(fields: [ownerId], references: [id], onDelete:Cascade)
@@ -32,6 +32,7 @@ model users {
   password  String
   updatedAt DateTime @db.Date
   username  String   @unique(map: "username_1")
+  avatar    String?
   pets      pets[]
 }
 
@@ -39,6 +40,7 @@ model vets {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   v                 Int      @map("__v")
   createdAt         DateTime @db.Date
+  avatar            String?
   degreeImage       String
   email             String   @unique
   fieldOfStudy      String

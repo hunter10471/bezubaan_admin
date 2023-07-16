@@ -1,9 +1,14 @@
+import getAllUsers from '@/app/actions/getAllUsers';
+import Table from '@/components/table/Table';
 import React from 'react';
 
-type Props = {};
-
-const Users = (props: Props) => {
-	return <div>Users</div>;
+const Users = async () => {
+	const users = await getAllUsers();
+	return (
+		<div>
+			<Table isUsersTable users={users} />
+		</div>
+	);
 };
 
 export default Users;

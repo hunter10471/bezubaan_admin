@@ -6,13 +6,15 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 interface InputProps {
 	id: string;
 	placeholder: string;
-	label: string;
+	label?: string;
 	required?: boolean;
 	icon?: React.ReactNode;
-	type: 'email' | 'password' | 'text';
+	type: 'email' | 'password' | 'text' | 'search';
 	disabled?: boolean;
 	register: UseFormRegister<FieldValues>;
 	errors: FieldErrors;
+	fullWidth?: boolean;
+	className?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -25,6 +27,8 @@ const Input: React.FC<InputProps> = ({
 	disabled,
 	register,
 	errors,
+	fullWidth,
+	className,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
@@ -32,19 +36,20 @@ const Input: React.FC<InputProps> = ({
 			<label className='font-medium'>{label}</label>
 			<div className='relative'>
 				<span
-					className={`absolute top-[6px] text-primary
+					className={`absolute top-[25%] left-3 text-primary
 					`}
 				>
 					{Icon}
 				</span>
 				<input
 					{...register(id, { required })}
-					className={` ${
-						Icon ? 'pr-2 pl-8' : 'px-4'
-					} py-1 focus:outline-none transition focus:border-primary border-b-[1px] border-neutral-300`}
+					className={` ${Icon ? 'pr-2 pl-10' : 'px-4'} ${
+						fullWidth ? 'w-full' : ''
+					}  py-1 focus:outline-none transition focus:border-primary border-b-[1px] border-neutral-300 ${className}`}
 					placeholder={placeholder}
 					required={required}
 					type={type === 'password' ? isVisible : type}
+					disabled={disabled}
 				/>
 				{type === 'password' && (
 					<div className='absolute top-2 right-6 cursor-pointer'>
