@@ -9,7 +9,9 @@ interface LoaderProps {
 const Loader: React.FC<LoaderProps> = ({ isFullScreen }) => {
 	return (
 		<div
-			className={`h-screen ${isFullScreen ? 'w-screen' : 'w-[70vw]'}  flex ${
+			className={` ${
+				isFullScreen ? 'w-screen h-screen' : 'w-[70vw] h-[70vh]'
+			}  flex ${
 				isFullScreen ? 'bg-primary' : 'bg-transparent'
 			} items-center justify-center`}
 		>

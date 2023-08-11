@@ -1,6 +1,6 @@
 'use client';
 import { SafeUser } from '@/app/types';
-import UserModal from '@/components/modal/UserModal';
+import CreateUserModal from '@/components/modal/CreateUserModal';
 import Table from '@/components/table/Table';
 import React, { useCallback, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -53,7 +53,7 @@ const TableClient: React.FC<TableClientProps> = ({ users }) => {
 				isUsersTable
 				users={updatedUsers}
 			/>
-			<UserModal getUsers={fetchUsers} />
+			<CreateUserModal getUsers={fetchUsers} />
 			<UpdateUserModal getUsers={fetchUsers} rowData={rowData} />
 			<ConfirmModal
 				type='users'

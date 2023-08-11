@@ -1,4 +1,5 @@
 'use client';
+import { University } from '@/common/enum';
 import React, { useState } from 'react';
 import { UseFormRegister, FieldValues, FieldErrors } from 'react-hook-form';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
@@ -19,6 +20,7 @@ interface InputProps {
 	smallLabel?: string;
 	labelVisibility?: boolean;
 	checked?: boolean;
+	university?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -37,6 +39,7 @@ const Input: React.FC<InputProps> = ({
 	smallLabel,
 	labelVisibility,
 	checked,
+	university,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
@@ -55,22 +58,35 @@ const Input: React.FC<InputProps> = ({
 					{Icon}
 				</span>
 
-				<input
-					checked={checked}
-					id={id}
-					disabled={disabled}
-					{...register(id, { required })}
-					className={` ${Icon ? 'pr-2 pl-8' : 'px-2'} ${
-						fullWidth ? 'w-full' : ''
-					}  py-1 focus:outline-none transition border-b-[1px] ${
-						errors[id]
-							? 'border-rose-500 focus:border-rose-500'
-							: 'focus:border-primary  border-neutral-300'
-					}  ${className}`}
-					placeholder={placeholder}
-					type={type === 'password' ? isVisible : type}
-					defaultValue={value}
-				/>
+				{!university ? (
+					<input
+						checked={checked}
+						id={id}
+						disabled={disabled}
+						{...register(id, { required })}
+						className={` ${Icon ? 'pr-2 pl-8' : 'px-2'} ${
+							fullWidth ? 'w-full' : ''
+						}  py-1 focus:outline-none transition border-b-[1px] ${
+							errors[id]
+								? 'border-rose-500 focus:border-rose-500'
+								: 'focus:border-primary  border-neutral-300'
+						}  ${className}`}
+						placeholder={placeholder}
+						type={type === 'password' ? isVisible : type}
+						defaultValue={value}
+					/>
+				) : (
+					<select
+						className='px-2 py-1 border-b-[1px] border-neutral-300 focus:border-primary focus:outline-none w-full '
+						{...register('university', { required })}
+					>
+						{Object.values(University).map((value) => (
+							<option key={value} value={value}>
+								{value}
+							</option>
+						))}
+					</select>
+				)}
 				<label htmlFor={id} className='ml-1 text-sm'>
 					{smallLabel}
 				</label>

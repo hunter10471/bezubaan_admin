@@ -9,6 +9,8 @@ import Button from '../button/Button';
 import { FaPlus } from 'react-icons/fa';
 import NoData from './NoData';
 import useCreateUserModal from '@/hooks/useCreateUserModal';
+import useCreatePetModal from '@/hooks/useCreatePetModal';
+import useCreateVetModal from '@/hooks/useCreateVetModal';
 
 interface TableProps {
 	users?: SafeUser[] | null;
@@ -33,7 +35,9 @@ const Table: React.FC<TableProps> = ({
 }) => {
 	const [placeholder, setPlaceholder] = useState('Search');
 	const userModal = useCreateUserModal();
-	const data = useMemo(() => {
+	const petModal = useCreatePetModal();
+	const vetModal = useCreateVetModal();
+	const data: any = useMemo(() => {
 		if (isUsersTable) {
 			setPlaceholder('Enter ID, username or email of a user');
 			return users;
@@ -75,6 +79,25 @@ const Table: React.FC<TableProps> = ({
 						user.id.toLowerCase().includes(query)
 				);
 				setQueriedData(filteredData);
+			} else if (isVetsTable && data) {
+				//@ts-ignore
+				const filteredData = data.filter(
+					(vet: SafeVet) =>
+						vet.username.toLowerCase().includes(query) ||
+						vet.email.toLowerCase().includes(query) ||
+						vet.id.toLowerCase().includes(query)
+				);
+				setQueriedData(filteredData);
+			} else if (isPetsTable && data) {
+				//@ts-ignore
+				const filteredData = data.filter(
+					(pet: SafePet) =>
+						pet.name.toLowerCase().includes(query) ||
+						pet.animalType.toLowerCase().includes(query) ||
+						pet.ownerId.toLowerCase().includes(query) ||
+						pet.id.toLowerCase().includes(query)
+				);
+				setQueriedData(filteredData);
 			}
 		}
 	};
@@ -108,14 +131,20 @@ const Table: React.FC<TableProps> = ({
 					primary={false}
 					dark
 					icon={<FaPlus />}
-					onClick={userModal.onOpen}
+					onClick={
+						isUsersTable
+							? userModal.onOpen
+							: isPetsTable
+							? petModal.onOpen
+							: vetModal.onOpen
+					}
 					title={`Add ${isUsersTable ? 'User' : isVetsTable ? 'Vet' : 'Pet'}`}
 				/>
 			</div>
 			<div
-				className={`h-[50vh] overflow-y-scroll w-full ${
-					isUsersTable ? 'overflow-x-hidden' : ''
-				}`}
+				className={`${
+					queriedData.length === 0 ? 'h-auto overflow-hidden' : 'h-[50vh]'
+				} overflow-y-scroll w-full ${isUsersTable ? 'overflow-x-hidden' : ''}`}
 			>
 				<table
 					className='bg-white rounded-lg w-[70vw] overflow-x-hidden shadow-lg'
@@ -128,14 +157,17 @@ const Table: React.FC<TableProps> = ({
 									{headerGroup.headers.map((column) => (
 										<React.Fragment key={column.id}>
 											<th
-												className='p-4 bg-neutral-200'
+												className='p-4 bg-neutral-200 first:rounded-tl-lg'
 												{...column.getHeaderProps()}
 											>
 												{column.render('Header')}
 											</th>
 										</React.Fragment>
 									))}
-									<th colSpan={2} className='py-4 px-8 bg-neutral-200'>
+									<th
+										colSpan={2}
+										className='py-4 px-8 bg-neutral-200 rounded-tr-lg'
+									>
 										Action
 									</th>
 								</tr>

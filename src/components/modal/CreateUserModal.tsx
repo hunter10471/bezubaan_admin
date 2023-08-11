@@ -63,7 +63,6 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 				);
 				if (response) imgUrl = response.data;
 			}
-			console.log(imgUrl);
 			await axios.post('/api/users', { ...data, avatar: imgUrl });
 			setFilePreview('');
 			setFile(undefined);

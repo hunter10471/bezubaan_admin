@@ -40,8 +40,8 @@ export const tableUsersSchema: {
 		accessor: 'avatar',
 		Cell: ({ value }) => (
 			<Image
-				width={42}
-				height={42}
+				width={54}
+				height={54}
 				className='rounded-full'
 				src={value || noAvatar}
 				alt='avatar'
@@ -112,8 +112,8 @@ export const tablePetsSchema: {
 		Cell: ({ value }) => (
 			<Image
 				style={{ minWidth: 42 }}
-				width={42}
-				height={42}
+				width={54}
+				height={54}
 				className='rounded-full'
 				src={value || noAvatarPet}
 				alt='avatar'
@@ -164,8 +164,8 @@ export const tableVetsSchema: {
 		Cell: ({ value }) => (
 			<Image
 				style={{ minWidth: 42 }}
-				width={42}
-				height={42}
+				width={54}
+				height={54}
 				className='rounded-full'
 				src={value || noAvatar}
 				alt='avatar'
@@ -188,8 +188,8 @@ export const tableVetsSchema: {
 				return (
 					<span
 						style={{
-							backgroundColor: 'rgb(254 215 170)',
-							color: 'rgb(249 115 22)',
+							backgroundColor: 'rgb(187 247 208)',
+							color: 'rgb(34 197 94)',
 						}}
 						className='font-medium px-6 py-2 rounded-xl'
 					>
@@ -212,8 +212,11 @@ export const tableVetsSchema: {
 		},
 	},
 	{
-		Header: 'Years Of Experience',
+		Header: 'Experience',
 		accessor: 'yearsOfExperience',
+		Cell: ({ value }) => {
+			return <span>{value} years</span>;
+		},
 	},
 	{
 		Header: 'Gender',
@@ -226,6 +229,13 @@ export const tableVetsSchema: {
 	{
 		Header: 'Field',
 		accessor: 'fieldOfStudy',
+	},
+	{
+		Header: 'Specializations',
+		accessor: 'specializations',
+		Cell: ({ value }) => {
+			return value.join(' | ');
+		},
 	},
 	{
 		Header: 'Created Date',

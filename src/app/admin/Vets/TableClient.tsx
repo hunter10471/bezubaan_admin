@@ -58,6 +58,7 @@ const TableClient: React.FC<TableClientProps> = ({ vets }) => {
 				rowId={rowId}
 				description='The following action is permanent and cannot be undone. Are you sure ?'
 			/>
+			<CreateVetModal getVets={fetchVets} />
 		</div>
 	);
 };

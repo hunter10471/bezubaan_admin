@@ -19,6 +19,7 @@ export enum FieldOfStudy {
 }
 
 export enum University {
+	placeholder = 'University',
 	UniversityOfKarachi = 'University of Karachi',
 	UniversityOfVeterinaryAndAnimalSciences = 'University of Veterinary and Animal Sciences',
 	SindhAgricultureUniversity = 'Sindh Agriculture University',
