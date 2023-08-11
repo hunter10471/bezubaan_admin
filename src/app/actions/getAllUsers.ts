@@ -8,7 +8,9 @@ export default async function getAllUsers(): Promise<SafeUser[] | null> {
 		if (!currentUser || !currentUser.isAdmin) {
 			return null;
 		}
-		const users = await prisma.users.findMany();
+		const users = await prisma.users.findMany({
+			orderBy: { createdAt: 'desc' },
+		});
 		if (users.length === 0) {
 			return null;
 		}

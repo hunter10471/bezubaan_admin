@@ -69,6 +69,7 @@ const Login = () => {
 						icon={<AiFillLock size={20} />}
 					/>
 					<Button
+						primary={true}
 						isLoading={isLoading}
 						onClick={handleSubmit(onSubmit)}
 						title='Login'

@@ -8,15 +8,16 @@ import Input from '../Input/Input';
 import { FiPlus } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+import useUpdateUserModal from '@/hooks/useUpdateUserModal';
 import { SafeUser } from '@/app/types';
 
 interface UserModalProps {
 	getUsers: () => void;
+	rowData: SafeUser | null;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
-	const userModal = useCreateUserModal();
+const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
+	const userModal = useUpdateUserModal();
 	const [isLoading, setIsLoading] = useState(false);
 	const [filePreview, setFilePreview] = useState('');
 	const [file, setFile] = useState();
@@ -34,17 +35,12 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 		formState: { errors },
 	} = useForm<FieldValues>({
 		defaultValues: {
-			email: '',
-			password: '',
-			username: '',
-			gender: '',
-			isAdmin: false,
+			...rowData,
 		},
 	});
 
 	const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
 		event?.preventDefault();
-		let imgUrl = '';
 		try {
 			setIsLoading(true);
 			if (file) {
@@ -61,10 +57,15 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 						},
 					}
 				);
-				if (response) imgUrl = response.data;
+				if (response)
+					setValue('avatar', response.data, {
+						shouldDirty: true,
+						shouldValidate: true,
+						shouldTouch: true,
+					});
 			}
-			console.log(imgUrl);
-			await axios.post('/api/users', { ...data, avatar: imgUrl });
+
+			await axios.put(`/api/users/${rowData?.id}`, data);
 			setFilePreview('');
 			setFile(undefined);
 			reset();
@@ -105,6 +106,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					placeholder='someone@mail.com'
 					label='Email'
 					required={true}
+					value={rowData?.email}
 				/>
 				<Input
 					id='password'
@@ -114,6 +116,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					placeholder='********'
 					label='Password'
 					required={true}
+					value={rowData?.password}
 				/>
 			</div>
 			<div className='flex justify-between gap-10 w-full'>
@@ -125,6 +128,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					placeholder='JohnDoe'
 					label='Username'
 					required
+					value={rowData?.username}
 				/>
 				<div className='flex gap-2 w-full'>
 					<Input
@@ -135,6 +139,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 						type='radio'
 						smallLabel='Male'
 						value='male'
+						checked={rowData?.gender === 'male'}
 					/>
 					<Input
 						id='gender'
@@ -145,6 +150,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 						smallLabel='Female'
 						value='female'
 						labelVisibility
+						checked={rowData?.gender === 'female'}
 					/>
 					<Input
 						id='gender'
@@ -156,6 +162,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 						smallLabel='Other'
 						value='other'
 						labelVisibility
+						checked={rowData?.gender === 'other'}
 					/>
 				</div>
 			</div>
@@ -168,6 +175,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					type='radio'
 					smallLabel='Yes'
 					value={true}
+					checked={rowData?.isAdmin === true}
 				/>
 				<Input
 					id='isAdmin'
@@ -178,6 +186,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					smallLabel='No'
 					value={false}
 					labelVisibility
+					checked={rowData?.isAdmin === false}
 				/>
 			</div>
 		</div>
@@ -196,7 +205,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 				<Button
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
-					title='Create'
+					title='Update'
 				/>
 			</div>
 		</div>
@@ -214,4 +223,4 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 	);
 };
 
-export default UserModal;
+export default UpdateUserModal;

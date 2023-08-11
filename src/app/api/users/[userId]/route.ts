@@ -36,7 +36,14 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
 		throw new Error('Invalid ID');
 	}
 	const body = await request.json();
-	const user = await prisma.users.update({ where: { id: userId }, data: body });
+	const user = await prisma.users.update({
+		where: { id: userId },
+		data: {
+			...body,
+			isAdmin: (body.isAdmin as any) === 'true' ? true : false,
+			updatedAt: new Date(),
+		},
+	});
 	return NextResponse.json(user);
 }
 

@@ -1,7 +1,7 @@
 'use client';
 import { SafePet, SafeUser, SafeVet } from '@/app/types';
-import { tablePetsSchema, tableUsersSchema } from '@/data';
-import React, { useMemo, useState } from 'react';
+import { tablePetsSchema, tableUsersSchema, tableVetsSchema } from '@/data';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiEditAlt, BiSearch } from 'react-icons/bi';
@@ -9,6 +9,7 @@ import Button from '../button/Button';
 import { FaPlus } from 'react-icons/fa';
 import NoData from './NoData';
 import useCreateUserModal from '@/hooks/useCreateUserModal';
+
 interface TableProps {
 	users?: SafeUser[] | null;
 	pets?: SafePet[] | null;
@@ -16,6 +17,8 @@ interface TableProps {
 	isUsersTable?: boolean;
 	isVetsTable?: boolean;
 	isPetsTable?: boolean;
+	deleteRow: (id: string) => void;
+	updateRow: (data: any) => void;
 }
 
 const Table: React.FC<TableProps> = ({
@@ -25,6 +28,8 @@ const Table: React.FC<TableProps> = ({
 	isUsersTable,
 	isPetsTable,
 	isVetsTable,
+	deleteRow,
+	updateRow,
 }) => {
 	const [placeholder, setPlaceholder] = useState('Search');
 	const userModal = useCreateUserModal();
@@ -50,19 +55,14 @@ const Table: React.FC<TableProps> = ({
 		} else if (isPetsTable) {
 			return tablePetsSchema;
 		} else if (isVetsTable) {
-			return [
-				{
-					Header: 'ID',
-					accessor: 'id',
-				},
-			];
+			return tableVetsSchema;
 		} else {
 			return [];
 		}
 	}, [isPetsTable, isVetsTable, isUsersTable]);
 
 	const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const query = e.target.value;
+		const query = e.target.value.toLowerCase();
 		if (query === '') {
 			setQueriedData(data);
 		} else {
@@ -70,22 +70,26 @@ const Table: React.FC<TableProps> = ({
 				//@ts-ignore
 				const filteredData = data.filter(
 					(user: SafeUser) =>
-						user.username.includes(query) ||
-						user.email.includes(query) ||
-						user.id.includes(query)
+						user.username.toLowerCase().includes(query) ||
+						user.email.toLowerCase().includes(query) ||
+						user.id.toLowerCase().includes(query)
 				);
 				setQueriedData(filteredData);
 			}
 		}
 	};
 
+	useEffect(() => {
+		setQueriedData(data);
+	}, [data, users, pets, vets]);
+
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
 		//@ts-ignore
 		useTable({ columns, data: [...queriedData] });
 	return (
-		<div className='w-[70vw]'>
+		<div className='w-[70vw] '>
 			<div
-				className={`flex items-center shadow-sm border-[3px] transition  ${
+				className={`flex items-center shadow-sm border-[3px] transition   ${
 					inputFocused ? 'border-primary/50' : 'border-neutral-100/50 '
 				} h-[50px] rounded-lg px-6 my-2`}
 			>
@@ -101,75 +105,84 @@ const Table: React.FC<TableProps> = ({
 			</div>
 			<div className='flex gap-2 justify-end'>
 				<Button
+					primary={false}
 					dark
 					icon={<FaPlus />}
 					onClick={userModal.onOpen}
-					title='Add User'
+					title={`Add ${isUsersTable ? 'User' : isVetsTable ? 'Vet' : 'Pet'}`}
 				/>
 			</div>
-			<table
-				className='bg-white rounded-lg w-full shadow-lg'
-				{...getTableProps()}
+			<div
+				className={`h-[50vh] overflow-y-scroll w-full ${
+					isUsersTable ? 'overflow-x-hidden' : ''
+				}`}
 			>
-				<thead>
-					{headerGroups.map((headerGroup) => (
-						<React.Fragment key={headerGroup.id}>
-							<tr {...headerGroup.getHeaderGroupProps()}>
-								{headerGroup.headers.map((column) => (
-									<React.Fragment key={column.id}>
-										<th
-											className='p-4 bg-neutral-200'
-											{...column.getHeaderProps()}
-										>
-											{column.render('Header')}
-										</th>
-									</React.Fragment>
-								))}
-								<th colSpan={2} className='py-4 px-8 bg-neutral-200'>
-									Action
-								</th>
-							</tr>
-						</React.Fragment>
-					))}
-				</thead>
-				<tbody {...getTableBodyProps()}>
-					{rows.map((row) => {
-						prepareRow(row);
-						return (
-							<React.Fragment key={row.id}>
-								<tr className='even:bg-neutral-50' {...row.getRowProps()}>
-									{row.cells.map((cell) => {
-										return (
-											<React.Fragment key={cell.value}>
-												<td
-													className={`p-4 ${
-														cell.column.id === 'avatar' ? 'pr-0' : ''
-													} text-center border-b-2 border-neutral-100`}
-													{...cell.getCellProps()}
-												>
-													{cell.render('Cell')}
-												</td>
-											</React.Fragment>
-										);
-									})}
-									<td className='py-4 pr-2 pl-6 text-center cursor-pointer'>
-										<BiEditAlt
-											className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
-											size={40}
-										/>
-									</td>
-									<td className='py-4 pl-2 pr-6 text-center cursor-pointer'>
-										<RiDeleteBin6Line
-											className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
-											size={40}
-										/>
-									</td>
+				<table
+					className='bg-white rounded-lg w-[70vw] overflow-x-hidden shadow-lg'
+					{...getTableProps()}
+				>
+					<thead>
+						{headerGroups.map((headerGroup) => (
+							<React.Fragment key={headerGroup.id}>
+								<tr {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										<React.Fragment key={column.id}>
+											<th
+												className='p-4 bg-neutral-200'
+												{...column.getHeaderProps()}
+											>
+												{column.render('Header')}
+											</th>
+										</React.Fragment>
+									))}
+									<th colSpan={2} className='py-4 px-8 bg-neutral-200'>
+										Action
+									</th>
 								</tr>
 							</React.Fragment>
-						);
-					})}
-				</tbody>
-			</table>
+						))}
+					</thead>
+					<tbody {...getTableBodyProps()}>
+						{rows.map((row) => {
+							prepareRow(row);
+							return (
+								<React.Fragment key={row.id}>
+									<tr className='even:bg-neutral-50 p-2' {...row.getRowProps()}>
+										{row.cells.map((cell) => {
+											return (
+												<React.Fragment key={cell.value}>
+													<td
+														className={`p-6 text-sm whitespace-nowrap object-cover ${
+															cell.column.id === 'avatar' ? 'pr-0' : ''
+														} text-center border-b-2 border-neutral-100`}
+														{...cell.getCellProps()}
+													>
+														{cell.render('Cell')}
+													</td>
+												</React.Fragment>
+											);
+										})}
+										<td className='py-4 pr-2 pl-6 text-center cursor-pointer'>
+											<BiEditAlt
+												onClick={() => updateRow(row.original)}
+												className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
+												size={40}
+											/>
+										</td>
+										<td className='py-4 pl-2 pr-6 text-center cursor-pointer'>
+											<RiDeleteBin6Line
+												onClick={() => deleteRow(row.original.id)}
+												className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
+												size={40}
+											/>
+										</td>
+									</tr>
+								</React.Fragment>
+							);
+						})}
+					</tbody>
+				</table>
+			</div>
 			{queriedData?.length === 0 && <NoData />}
 		</div>
 	);

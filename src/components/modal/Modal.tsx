@@ -4,7 +4,7 @@ import { IoMdClose } from 'react-icons/io';
 import Button from '../button/Button';
 
 interface ModalProps {
-	isOpen?: boolean;
+	isOpen: boolean;
 	onClose: () => void;
 	title?: string;
 	body?: JSX.Element;
@@ -54,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({
 							{/* HEADER */}
 							<div className='flex items-center p-6 rounded-t justify-center relative border-b-[1px]'>
 								<button
-									onClick={handleClose}
+									onClick={onClose}
 									className='p-1 border-0 hover:opacity-0 transition absolute left-9'
 								>
 									<IoMdClose />

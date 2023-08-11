@@ -1,4 +1,3 @@
-import Sidebar from '@/components/sidebar/Sidebar';
 import './globals.css';
 import { Roboto } from 'next/font/google';
 import ToasterProvider from './Providers/ToasterProvider';

@@ -11,3 +11,16 @@
 	-ms-user-select: none;
 	user-select: none;
 }
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #ccc;
+	border-radius: 5px;
+}

@@ -9,6 +9,7 @@ import { SafePet } from './app/types';
 import moment from 'moment-timezone';
 import Image from 'next/image';
 import noAvatar from '../public/assets/no-avatar.png';
+import noAvatarPet from '../public/assets/no-avatar-pet.png';
 
 export const SidebarItems: {
 	title: string;
@@ -39,7 +40,8 @@ export const tableUsersSchema: {
 		accessor: 'avatar',
 		Cell: ({ value }) => (
 			<Image
-				style={{ height: 42, width: 42 }}
+				width={42}
+				height={42}
 				className='rounded-full'
 				src={value || noAvatar}
 				alt='avatar'
@@ -101,7 +103,23 @@ export const tablePetsSchema: {
 	Header: string;
 	accessor: string;
 	pet?: SafePet;
+	className?: string;
+	Cell?: (value: any) => void;
 }[] = [
+	{
+		Header: '',
+		accessor: 'image',
+		Cell: ({ value }) => (
+			<Image
+				style={{ minWidth: 42 }}
+				width={42}
+				height={42}
+				className='rounded-full'
+				src={value || noAvatarPet}
+				alt='avatar'
+			/>
+		),
+	},
 	{
 		Header: 'Name',
 		accessor: 'name',
@@ -129,5 +147,90 @@ export const tablePetsSchema: {
 	{
 		Header: 'Created Date',
 		accessor: 'createdAt',
+		Cell: ({ value }) =>
+			moment.tz(value, 'Asia/Karachi').format('DD-MM-YYYY | hh:mm:ss A'),
+	},
+];
+
+export const tableVetsSchema: {
+	Header: string;
+	accessor: string;
+	className?: string;
+	Cell?: (value: any) => void;
+}[] = [
+	{
+		Header: '',
+		accessor: 'avatar',
+		Cell: ({ value }) => (
+			<Image
+				style={{ minWidth: 42 }}
+				width={42}
+				height={42}
+				className='rounded-full'
+				src={value || noAvatar}
+				alt='avatar'
+			/>
+		),
+	},
+	{
+		Header: 'Username',
+		accessor: 'username',
+	},
+	{
+		Header: 'Email',
+		accessor: 'email',
+	},
+	{
+		Header: 'Approved',
+		accessor: 'isApproved',
+		Cell: ({ value }) => {
+			if (value) {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(254 215 170)',
+							color: 'rgb(249 115 22)',
+						}}
+						className='font-medium px-6 py-2 rounded-xl'
+					>
+						Yes
+					</span>
+				);
+			} else {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(254 205 211)',
+							color: 'rgb(244 63 94)',
+						}}
+						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+					>
+						No
+					</span>
+				);
+			}
+		},
+	},
+	{
+		Header: 'Years Of Experience',
+		accessor: 'yearsOfExperience',
+	},
+	{
+		Header: 'Gender',
+		accessor: 'gender',
+	},
+	{
+		Header: 'University',
+		accessor: 'university',
+	},
+	{
+		Header: 'Field',
+		accessor: 'fieldOfStudy',
+	},
+	{
+		Header: 'Created Date',
+		accessor: 'createdAt',
+		Cell: ({ value }) =>
+			moment.tz(value, 'Asia/Karachi').format('DD-MM-YYYY | hh:mm:ss A'),
 	},
 ];

@@ -3,6 +3,7 @@ import { Roboto } from 'next/font/google';
 import getCurrentUser from '../actions/getCurrentUser';
 import { redirect } from 'next/navigation';
 import Heading from '@/components/heading/Heading';
+import ToasterProvider from '../Providers/ToasterProvider';
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
@@ -23,6 +24,7 @@ export default async function RootLayout({
 		return (
 			<html lang='en'>
 				<body className={roboto.className}>
+					<ToasterProvider />
 					<div className='flex relative'>
 						<Sidebar />
 						<div className='w-full min-h-screen text-neutral-800 p-8 pl-[300px]'>

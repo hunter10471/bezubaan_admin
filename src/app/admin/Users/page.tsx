@@ -1,16 +1,10 @@
 import getAllUsers from '@/app/actions/getAllUsers';
-import UserModal from '@/components/modal/UserModal';
-import Table from '@/components/table/Table';
 import React from 'react';
+import TableClient from './TableClient';
 
 const Users = async () => {
 	const users = await getAllUsers();
-	return (
-		<div>
-			<Table isUsersTable users={users} />
-			<UserModal />
-		</div>
-	);
+	return <TableClient users={users} />;
 };
 
 export default Users;

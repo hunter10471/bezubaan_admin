@@ -18,6 +18,7 @@ interface InputProps {
 	value?: any;
 	smallLabel?: string;
 	labelVisibility?: boolean;
+	checked?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -35,6 +36,7 @@ const Input: React.FC<InputProps> = ({
 	value,
 	smallLabel,
 	labelVisibility,
+	checked,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
@@ -54,6 +56,7 @@ const Input: React.FC<InputProps> = ({
 				</span>
 
 				<input
+					checked={checked}
 					id={id}
 					disabled={disabled}
 					{...register(id, { required })}
