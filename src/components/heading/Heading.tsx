@@ -6,6 +6,9 @@ import React from 'react';
 interface HeadingProps {
 	title: string;
 	checkPath?: boolean;
+	className?: string;
+	small?: boolean;
+	subtitle?: string;
 }
 
 const poppins = Poppins({
@@ -13,11 +16,26 @@ const poppins = Poppins({
 	weight: ['400', '600'],
 });
 
-const Heading: React.FC<HeadingProps> = ({ title, checkPath }) => {
+const Heading: React.FC<HeadingProps> = ({
+	title,
+	checkPath,
+	className,
+	small,
+	subtitle,
+}) => {
 	const pathname = usePathname();
 	let heading = checkPath && pathname ? pathname.split('/')[2] : title;
 	return (
-		<h1 className={`${poppins.className} font-bold text-[32px]`}>{heading}</h1>
+		<div>
+			<h1
+				className={`${poppins.className} font-bold  ${
+					small ? 'text-[24px]' : 'text-[32px]'
+				} ${className} `}
+			>
+				{heading}
+			</h1>
+			<span className='text-sm font-medium text-neutral-400'>{subtitle}</span>
+		</div>
 	);
 };
 

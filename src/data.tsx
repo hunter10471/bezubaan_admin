@@ -69,7 +69,7 @@ export const tableUsersSchema: {
 							backgroundColor: 'rgb(254 215 170)',
 							color: 'rgb(249 115 22)',
 						}}
-						className='font-medium px-4 py-1 rounded-xl'
+						className='font-medium px-6 py-2 rounded-xl'
 					>
 						Yes
 					</span>
@@ -81,7 +81,7 @@ export const tableUsersSchema: {
 							backgroundColor: 'rgb(191 219 254)',
 							color: 'rgb(59 130 246)',
 						}}
-						className='bg-blue-200 text-blue-500 px-4 font-medium py-1 rounded-xl'
+						className='bg-blue-200 text-blue-500 px-6 font-medium py-2 rounded-xl'
 					>
 						No
 					</span>

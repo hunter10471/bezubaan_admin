@@ -15,7 +15,7 @@ const Sidebar = () => {
 		}
 	}, [pathname, currentPath]);
 	return (
-		<div className='w-[20vw] min-w-[250px] p-6 bg-white h-screen overflow-y-hidden shadow-xl'>
+		<div className='fixed w-[250px] p-6 bg-white h-screen overflow-y-hidden shadow-xl'>
 			<Logo />
 			<ul className='my-10'>
 				{SidebarItems.map((item) =>

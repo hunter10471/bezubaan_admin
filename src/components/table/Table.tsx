@@ -7,8 +7,8 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiEditAlt, BiSearch } from 'react-icons/bi';
 import Button from '../button/Button';
 import { FaPlus } from 'react-icons/fa';
-import { AiOutlineCloudDownload } from 'react-icons/ai';
 import NoData from './NoData';
+import useCreateUserModal from '@/hooks/useCreateUserModal';
 interface TableProps {
 	users?: SafeUser[] | null;
 	pets?: SafePet[] | null;
@@ -27,6 +27,7 @@ const Table: React.FC<TableProps> = ({
 	isVetsTable,
 }) => {
 	const [placeholder, setPlaceholder] = useState('Search');
+	const userModal = useCreateUserModal();
 	const data = useMemo(() => {
 		if (isUsersTable) {
 			setPlaceholder('Enter ID, username or email of a user');
@@ -99,7 +100,12 @@ const Table: React.FC<TableProps> = ({
 				/>
 			</div>
 			<div className='flex gap-2 justify-end'>
-				<Button dark icon={<FaPlus />} onClick={() => {}} title='Add User' />
+				<Button
+					dark
+					icon={<FaPlus />}
+					onClick={userModal.onOpen}
+					title='Add User'
+				/>
 			</div>
 			<table
 				className='bg-white rounded-lg w-full shadow-lg'
@@ -131,7 +137,7 @@ const Table: React.FC<TableProps> = ({
 						prepareRow(row);
 						return (
 							<React.Fragment key={row.id}>
-								<tr className='even:bg-neutral-100' {...row.getRowProps()}>
+								<tr className='even:bg-neutral-50' {...row.getRowProps()}>
 									{row.cells.map((cell) => {
 										return (
 											<React.Fragment key={cell.value}>
@@ -146,11 +152,17 @@ const Table: React.FC<TableProps> = ({
 											</React.Fragment>
 										);
 									})}
-									<td className='py-4 pr-3 pl-6 text-center cursor-pointer'>
-										<BiEditAlt className='text-neutral-700' size={22} />
+									<td className='py-4 pr-2 pl-6 text-center cursor-pointer'>
+										<BiEditAlt
+											className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
+											size={40}
+										/>
 									</td>
-									<td className='py-4 pl-3 pr-6 text-center cursor-pointer'>
-										<RiDeleteBin6Line className='text-neutral-700' size={22} />
+									<td className='py-4 pl-2 pr-6 text-center cursor-pointer'>
+										<RiDeleteBin6Line
+											className='text-neutral-700 transition p-2 hover:bg-neutral-100 rounded-full'
+											size={40}
+										/>
 									</td>
 								</tr>
 							</React.Fragment>

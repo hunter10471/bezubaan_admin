@@ -23,10 +23,11 @@ export default async function RootLayout({
 		return (
 			<html lang='en'>
 				<body className={roboto.className}>
-					<div className='flex'>
+					<div className='flex relative'>
 						<Sidebar />
-						<div className='w-full min-h-screen text-neutral-800 p-8'>
+						<div className='w-full min-h-screen text-neutral-800 p-8 pl-[300px]'>
 							<Heading title='Dashboard' checkPath />
+							<br />
 							{children}
 						</div>
 					</div>

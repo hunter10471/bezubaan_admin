@@ -5,16 +5,19 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 interface InputProps {
 	id: string;
-	placeholder: string;
+	placeholder?: string;
 	label?: string;
 	required?: boolean;
 	icon?: React.ReactNode;
-	type: 'email' | 'password' | 'text' | 'search';
+	type: 'email' | 'password' | 'text' | 'search' | 'radio';
 	disabled?: boolean;
 	register: UseFormRegister<FieldValues>;
 	errors: FieldErrors;
 	fullWidth?: boolean;
 	className?: string;
+	value?: any;
+	smallLabel?: string;
+	labelVisibility?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -29,28 +32,45 @@ const Input: React.FC<InputProps> = ({
 	errors,
 	fullWidth,
 	className,
+	value,
+	smallLabel,
+	labelVisibility,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
 		<div className='my-5'>
-			<label className='font-medium'>{label}</label>
+			<label
+				style={{ visibility: labelVisibility ? 'hidden' : 'visible' }}
+				className={`font-medium`}
+			>
+				{label}
+			</label>
 			<div className='relative'>
 				<span
-					className={`absolute top-[25%] left-3 text-primary
+					className={`absolute top-[25%] left-2 text-primary
 					`}
 				>
 					{Icon}
 				</span>
+
 				<input
-					{...register(id, { required })}
-					className={` ${Icon ? 'pr-2 pl-10' : 'px-4'} ${
-						fullWidth ? 'w-full' : ''
-					}  py-1 focus:outline-none transition focus:border-primary border-b-[1px] border-neutral-300 ${className}`}
-					placeholder={placeholder}
-					required={required}
-					type={type === 'password' ? isVisible : type}
+					id={id}
 					disabled={disabled}
+					{...register(id, { required })}
+					className={` ${Icon ? 'pr-2 pl-8' : 'px-2'} ${
+						fullWidth ? 'w-full' : ''
+					}  py-1 focus:outline-none transition border-b-[1px] ${
+						errors[id]
+							? 'border-rose-500 focus:border-rose-500'
+							: 'focus:border-primary  border-neutral-300'
+					}  ${className}`}
+					placeholder={placeholder}
+					type={type === 'password' ? isVisible : type}
+					defaultValue={value}
 				/>
+				<label htmlFor={id} className='ml-1 text-sm'>
+					{smallLabel}
+				</label>
 				{type === 'password' && (
 					<div className='absolute top-2 right-6 cursor-pointer'>
 						{isVisible === 'password' ? (
