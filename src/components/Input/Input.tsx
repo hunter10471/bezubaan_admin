@@ -20,7 +20,8 @@ interface InputProps {
 	smallLabel?: string;
 	labelVisibility?: boolean;
 	checked?: boolean;
-	university?: boolean;
+	select?: boolean;
+	options?: any;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -39,7 +40,8 @@ const Input: React.FC<InputProps> = ({
 	smallLabel,
 	labelVisibility,
 	checked,
-	university,
+	select,
+	options,
 }) => {
 	const [isVisible, setIsVisible] = useState<'text' | 'password'>('password');
 	return (
@@ -58,9 +60,9 @@ const Input: React.FC<InputProps> = ({
 					{Icon}
 				</span>
 
-				{!university ? (
+				{!select ? (
 					<input
-						checked={checked}
+						defaultChecked={checked}
 						id={id}
 						disabled={disabled}
 						{...register(id, { required })}
@@ -78,11 +80,11 @@ const Input: React.FC<InputProps> = ({
 				) : (
 					<select
 						className='px-2 py-1 border-b-[1px] border-neutral-300 focus:border-primary focus:outline-none w-full '
-						{...register('university', { required })}
+						{...register(id, { required })}
 					>
-						{Object.values(University).map((value) => (
-							<option key={value} value={value}>
-								{value}
+						{Object.values(options).map((value) => (
+							<option key={value as any} value={value as any}>
+								{value as any}
 							</option>
 						))}
 					</select>

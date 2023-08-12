@@ -8,6 +8,8 @@ import { toast } from 'react-hot-toast';
 import CreateVetModal from '@/components/modal/CreateVetModal';
 import useCreateVetModal from '@/hooks/useCreateVetModal';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import UpdateVetModal from '@/components/modal/UpdateVetModal';
+import useUpdateVetModal from '@/hooks/useUpdateVetModal';
 
 interface TableClientProps {
 	vets: SafeVet[] | null;
@@ -17,7 +19,7 @@ const TableClient: React.FC<TableClientProps> = ({ vets }) => {
 	const [updatedVets, setUpdatedVets] = useState(vets);
 	const [rowId, setRowId] = useState('');
 	const [rowData, setRowData] = useState<SafeVet | null>(null);
-	const vetModal = useCreateVetModal();
+	const updateVetModal = useUpdateVetModal();
 	const confirmModal = useConfirmModal();
 	const fetchVets = async () => {
 		try {
@@ -39,9 +41,9 @@ const TableClient: React.FC<TableClientProps> = ({ vets }) => {
 	const updateRow = useCallback(
 		async (data: SafeVet) => {
 			setRowData(data);
-			vetModal.onOpen();
+			updateVetModal.onOpen();
 		},
-		[vetModal]
+		[updateVetModal]
 	);
 	return (
 		<div>
@@ -59,6 +61,7 @@ const TableClient: React.FC<TableClientProps> = ({ vets }) => {
 				description='The following action is permanent and cannot be undone. Are you sure ?'
 			/>
 			<CreateVetModal getVets={fetchVets} />
+			<UpdateVetModal rowData={rowData} getVets={fetchVets} />
 		</div>
 	);
 };

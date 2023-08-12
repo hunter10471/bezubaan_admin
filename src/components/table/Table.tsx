@@ -1,7 +1,7 @@
 'use client';
 import { SafePet, SafeUser, SafeVet } from '@/app/types';
 import { tablePetsSchema, tableUsersSchema, tableVetsSchema } from '@/data';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiEditAlt, BiSearch } from 'react-icons/bi';
@@ -144,7 +144,9 @@ const Table: React.FC<TableProps> = ({
 			<div
 				className={`${
 					queriedData.length === 0 ? 'h-auto overflow-hidden' : 'h-[50vh]'
-				} overflow-y-scroll w-full ${isUsersTable ? 'overflow-x-hidden' : ''}`}
+				} overflow-y-scroll w-full ${
+					isUsersTable || isPetsTable ? 'overflow-x-hidden' : ''
+				}`}
 			>
 				<table
 					className='bg-white rounded-lg w-[70vw] overflow-x-hidden shadow-lg'
@@ -179,13 +181,19 @@ const Table: React.FC<TableProps> = ({
 							prepareRow(row);
 							return (
 								<React.Fragment key={row.id}>
-									<tr className='even:bg-neutral-50 p-2' {...row.getRowProps()}>
+									<tr
+										className='even:bg-neutral-100 hover:bg-primary/10 transition cursor-pointer p-2'
+										{...row.getRowProps()}
+									>
 										{row.cells.map((cell) => {
 											return (
 												<React.Fragment key={cell.value}>
 													<td
 														className={`p-6 text-sm whitespace-nowrap object-cover ${
-															cell.column.id === 'avatar' ? 'pr-0' : ''
+															cell.column.id === 'avatar' ||
+															cell.column.id === 'image'
+																? 'pr-0'
+																: ''
 														} text-center border-b-2 border-neutral-100`}
 														{...cell.getCellProps()}
 													>

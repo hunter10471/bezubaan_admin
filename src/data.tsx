@@ -24,7 +24,7 @@ export const SidebarItems: {
 	{ title: 'Appointments', icon: BiSolidTimeFive },
 	{ title: 'Admin Tools', isHeading: true },
 	{ title: 'Notifications', icon: MdNotifications },
-	{ title: 'Analytics', icon: BsFileBarGraphFill },
+	// { title: 'Analytics', icon: BsFileBarGraphFill },
 	{ title: 'Settings', icon: IoSettingsSharp },
 	{ title: 'Logout', icon: BiSolidLogOut },
 ];
@@ -40,8 +40,8 @@ export const tableUsersSchema: {
 		accessor: 'avatar',
 		Cell: ({ value }) => (
 			<Image
-				width={54}
-				height={54}
+				width={42}
+				height={42}
 				className='rounded-full'
 				src={value || noAvatar}
 				alt='avatar'
@@ -68,7 +68,7 @@ export const tableUsersSchema: {
 				return (
 					<span
 						style={{
-							backgroundColor: 'rgb(254 215 170)',
+							backgroundColor: 'rgb(242 215 170)',
 							color: 'rgb(249 115 22)',
 						}}
 						className='font-medium px-6 py-2 rounded-xl'
@@ -80,7 +80,7 @@ export const tableUsersSchema: {
 				return (
 					<span
 						style={{
-							backgroundColor: 'rgb(191 219 254)',
+							backgroundColor: 'rgb(191 219 242)',
 							color: 'rgb(59 130 246)',
 						}}
 						className='bg-blue-200 text-blue-500 px-6 font-medium py-2 rounded-xl'
@@ -112,8 +112,8 @@ export const tablePetsSchema: {
 		Cell: ({ value }) => (
 			<Image
 				style={{ minWidth: 42 }}
-				width={54}
-				height={54}
+				width={42}
+				height={42}
 				className='rounded-full'
 				src={value || noAvatarPet}
 				alt='avatar'
@@ -141,7 +141,7 @@ export const tablePetsSchema: {
 		accessor: 'age',
 	},
 	{
-		Header: 'Owner',
+		Header: 'Owner ID',
 		accessor: 'ownerId',
 	},
 	{
@@ -164,8 +164,8 @@ export const tableVetsSchema: {
 		Cell: ({ value }) => (
 			<Image
 				style={{ minWidth: 42 }}
-				width={54}
-				height={54}
+				width={42}
+				height={42}
 				className='rounded-full'
 				src={value || noAvatar}
 				alt='avatar'
@@ -200,7 +200,7 @@ export const tableVetsSchema: {
 				return (
 					<span
 						style={{
-							backgroundColor: 'rgb(254 205 211)',
+							backgroundColor: 'rgb(242 205 211)',
 							color: 'rgb(244 63 94)',
 						}}
 						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'

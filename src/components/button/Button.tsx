@@ -37,27 +37,31 @@ const Button: React.FC<ButtonProps> = ({
 			disabled={disabled || isLoading}
 			onClick={onClick}
 			className={`flex items-center my-2 px-8 py-2 gap-2 no_highlights ${
-				primary ? 'text-white bg-primary hover:bg-heading' : ''
+				primary
+					? 'text-white bg-primary hover:bg-heading disabled:bg-heading'
+					: ''
 			} ${
 				outline
 					? 'text-primary hover:text-heading  border-primary hover:border-heading '
 					: ''
 			} rounded-lg transition capitalize font-medium disabled:cursor-not-allowed border-2 ${
-				dark ? 'bg-neutral-800 text-white hover:bg-neutral-700' : ''
+				dark
+					? 'bg-neutral-800 text-white hover:bg-neutral-700 disabled:bg-neutral-600'
+					: ''
 			} ${
 				darkOutline
 					? 'border-2 bg-white text-neutral-700 hover:text-neutral-700 border-neutral-800 hover:border-neutral-700'
 					: ''
 			} ${
 				red
-					? 'text-white  border-rose-500 hover:border-rose-600 bg-rose-500 hover:bg-rose-600'
+					? `text-white  border-rose-500 hover:border-rose-600 bg-rose-500 hover:bg-rose-600 disabled:bg-rose-600}`
 					: ''
 			}  ${className} `}
 		>
 			{isLoading ? (
 				<ClipLoader
 					loading={isLoading}
-					size={15}
+					size={27}
 					color={outline ? '#40B37C' : '#fff'}
 				/>
 			) : (

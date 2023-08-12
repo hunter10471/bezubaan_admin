@@ -1,28 +1,34 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../button/Button';
-import useCreateVetModal from '@/hooks/useCreateVetModal';
+import useUpdateVetModal from '@/hooks/useUpdateVetModal';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '../Input/Input';
 import { FiPlus } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { SafeVet } from '@/app/types';
 import { University } from '@/common/enum';
 
-interface CreateVetModalProps {
+interface UpdateVetModalProps {
 	getVets: () => void;
+	rowData: SafeVet | null;
 }
 
-const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
-	const CreateVetModal = useCreateVetModal();
+const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
+	getVets,
+	rowData,
+}) => {
+	const UpdateVetModal = useUpdateVetModal();
 	const [isLoading, setIsLoading] = useState(false);
-	const [filePreview, setFilePreview] = useState('');
+	const [filePreview, setFilePreview] = useState(rowData?.avatar || '');
 	const [file, setFile] = useState(null);
-	const [filePreview1, setFilePreview1] = useState('');
+	const [filePreview1, setFilePreview1] = useState(rowData?.degreeImage || '');
 	const [file1, setFile1] = useState(null);
-	const [filePreview2, setFilePreview2] = useState('');
+	const [filePreview2, setFilePreview2] = useState(rowData?.licenseImage || '');
 	const [file2, setFile2] = useState(null);
+
 	const handleImagePreview = useCallback((e: any) => {
 		if (e.target.files) {
 			{
@@ -48,19 +54,26 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 		formState: { errors },
 	} = useForm<FieldValues>({
 		defaultValues: {
-			email: '',
-			password: '',
-			username: '',
-			gender: '',
-			isApproved: false,
-			fieldOfStudy: '',
-			university: '',
+			...rowData,
+			specializations: rowData?.specializations.join(','),
 		},
 	});
+
+	useEffect(() => {
+		reset({
+			...rowData,
+			specializations: rowData?.specializations.join(', '),
+		});
+		setFilePreview(rowData?.avatar || '');
+		setFilePreview1(rowData?.degreeImage || '');
+		setFilePreview2(rowData?.licenseImage || '');
+	}, [rowData, reset]);
 
 	const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
 		event?.preventDefault();
 		let files: any[] = [];
+		let transformedFiles: any[] = [];
+
 		try {
 			setIsLoading(true);
 			if (file && file1 && file2) {
@@ -85,12 +98,12 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					);
 					if (response) (image.file as any) = response.data;
 				}
+				transformedFiles = files.reduce((acc, { file, id }) => {
+					acc[id] = file;
+					return acc;
+				}, {});
 			}
-			const transformedFiles = files.reduce((acc, { file, id }) => {
-				acc[id] = file;
-				return acc;
-			}, {});
-			await axios.post('/api/vets', {
+			await axios.put(`/api/vets/${rowData?.id}`, {
 				...data,
 				...transformedFiles,
 				specializations: data.specializations.split(','),
@@ -104,10 +117,10 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 			setFile2(null);
 			reset();
 			getVets();
-			CreateVetModal.onClose();
-			toast.success('Vet created successfully.');
+			UpdateVetModal.onClose();
+			toast.success('Vet updated successfully.');
 		} catch (error) {
-			toast.error('There was an error creating this vet.');
+			toast.error('There was an error updating this vet.');
 			console.log(errors);
 		}
 		setIsLoading(false);
@@ -139,7 +152,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					type='email'
 					placeholder='someone@mail.com'
 					label='Email'
-					required={true}
+					value={rowData?.email}
 				/>
 				<Input
 					id='password'
@@ -148,7 +161,6 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					type='password'
 					placeholder='********'
 					label='Password'
-					required={true}
 				/>
 			</div>
 			<div className='flex justify-between gap-10 w-full items-center'>
@@ -159,7 +171,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					type='text'
 					placeholder='JohnDoe'
 					label='Username'
-					required
+					value={rowData?.username}
 				/>
 				<div className='flex gap-2 w-full'>
 					<Input
@@ -170,6 +182,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 						type='radio'
 						smallLabel='Male'
 						value='male'
+						checked={rowData?.gender === 'male'}
 					/>
 					<Input
 						id='gender'
@@ -180,6 +193,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 						smallLabel='Female'
 						value='female'
 						labelVisibility
+						checked={rowData?.gender === 'female'}
 					/>
 					<Input
 						id='gender'
@@ -191,6 +205,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 						smallLabel='Other'
 						value='other'
 						labelVisibility
+						checked={rowData?.gender === 'other'}
 					/>
 				</div>
 			</div>
@@ -202,6 +217,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					label='Years Of Experience'
 					type='text'
 					placeholder='10'
+					value={rowData?.yearsOfExperience}
 				/>
 				<div className='flex gap-2 w-full'>
 					<Input
@@ -212,6 +228,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 						type='radio'
 						smallLabel='Yes'
 						value={true}
+						checked={rowData?.isApproved}
 					/>
 					<Input
 						id='isApproved'
@@ -222,6 +239,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 						smallLabel='No'
 						value={false}
 						labelVisibility
+						checked={!rowData?.isApproved}
 					/>
 				</div>
 			</div>
@@ -242,6 +260,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					label='Field Of Study'
 					type='text'
 					placeholder='Veterinary Medicine'
+					value={rowData?.fieldOfStudy}
 				/>
 			</div>
 			<div className='flex justify-between w-full'>
@@ -254,6 +273,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					placeholder='Medicine,Surgery'
 					fullWidth
 					className='min-w-[400px]'
+					value={rowData?.specializations.join(', ')}
 				/>
 			</div>
 			<div className='w-full flex justify-between gap-10'>
@@ -302,13 +322,13 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 				<Button
 					primary={false}
 					outline
-					onClick={CreateVetModal.onClose}
+					onClick={UpdateVetModal.onClose}
 					title='Cancel'
 				/>
 				<Button
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
-					title='Create'
+					title='Update'
 				/>
 			</div>
 		</div>
@@ -319,11 +339,11 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 			footer={footerContent}
 			body={bodyContent}
 			disabled={isLoading}
-			isOpen={CreateVetModal.isOpen}
-			title='Add Vet'
-			onClose={CreateVetModal.onClose}
+			isOpen={UpdateVetModal.isOpen}
+			title='Update Vet'
+			onClose={UpdateVetModal.onClose}
 		/>
 	);
 };
 
-export default CreateVetModal;
+export default UpdateVetModal;

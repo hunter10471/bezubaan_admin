@@ -8,7 +8,7 @@ export default async function getAllPets(): Promise<SafePet[] | null> {
 		if (!currentUser || !currentUser.isAdmin) {
 			return null;
 		}
-		const pets = await prisma.pets.findMany();
+		const pets = await prisma.pets.findMany({ orderBy: { createdAt: 'desc' } });
 		if (pets.length === 0) {
 			return null;
 		}

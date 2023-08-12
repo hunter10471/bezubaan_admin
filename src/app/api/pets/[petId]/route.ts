@@ -1,10 +1,10 @@
 import getCurrentUser from '@/app/actions/getCurrentUser';
 import { NextResponse } from 'next/server';
 import prisma from '@/app/libs/prismadb';
-import { vets } from '@prisma/client';
+import { pets } from '@prisma/client';
 
 interface IParams {
-	vetId?: string;
+	petId?: string;
 }
 
 export async function DELETE(
@@ -15,16 +15,16 @@ export async function DELETE(
 	if (!currentUser || !currentUser.isAdmin) {
 		return NextResponse.error();
 	}
-	const { vetId } = params;
-	if (!vetId || typeof vetId !== 'string') {
+	const { petId } = params;
+	if (!petId || typeof petId !== 'string') {
 		throw new Error('Invalid ID');
 	}
-	const vet = await prisma.vets.delete({
+	const pet = await prisma.pets.delete({
 		where: {
-			id: vetId,
+			id: petId,
 		},
 	});
-	return NextResponse.json(vet);
+	return NextResponse.json(pet);
 }
 
 export async function PUT(request: Request, { params }: { params: IParams }) {
@@ -32,21 +32,20 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
 	if (!currentUser || !currentUser.isAdmin) {
 		return NextResponse.error();
 	}
-	const { vetId } = params;
-	if (!vetId || typeof vetId !== 'string') {
+	const { petId } = params;
+	if (!petId || typeof petId !== 'string') {
 		throw new Error('Invalid ID');
 	}
-	const body: vets = await request.json();
+	const body: pets = await request.json();
 	const { id, ...others } = body;
-	const vet = await prisma.vets.update({
-		where: { id: vetId },
+	const pet = await prisma.pets.update({
+		where: { id: petId },
 		data: {
 			...others,
-			isApproved: (body.isApproved as any) === 'true' ? true : false,
 			updatedAt: new Date(),
 		},
 	});
-	return NextResponse.json(vet);
+	return NextResponse.json(pet);
 }
 
 export async function GET(request: Request, { params }: { params: IParams }) {
@@ -54,10 +53,10 @@ export async function GET(request: Request, { params }: { params: IParams }) {
 	if (!currentUser || !currentUser.isAdmin) {
 		return NextResponse.error();
 	}
-	const { vetId } = params;
-	if (!vetId || typeof vetId !== 'string') {
+	const { petId } = params;
+	if (!petId || typeof petId !== 'string') {
 		throw new Error('Invalid ID');
 	}
-	const vet = await prisma.vets.findUnique({ where: { id: vetId } });
-	return NextResponse.json(vet);
+	const pet = await prisma.pets.findUnique({ where: { id: petId } });
+	return NextResponse.json(pet);
 }

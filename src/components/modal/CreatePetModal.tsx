@@ -1,25 +1,23 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Modal from './Modal';
 import Button from '../button/Button';
-import useCreateUserModal from '@/hooks/useCreateUserModal';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '../Input/Input';
 import { FiPlus } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import useUpdateUserModal from '@/hooks/useUpdateUserModal';
-import { SafeUser } from '@/app/types';
+import useCreatePetModal from '@/hooks/useCreatePetModal';
+import { AnimalType } from '@/common/enum';
 
 interface UserModalProps {
-	getUsers: () => void;
-	rowData: SafeUser | null;
+	getPets: () => void;
 }
 
-const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
-	const userModal = useUpdateUserModal();
+const CreatePetModal: React.FC<UserModalProps> = ({ getPets }) => {
+	const petModal = useCreatePetModal();
 	const [isLoading, setIsLoading] = useState(false);
-	const [filePreview, setFilePreview] = useState(rowData?.avatar || '');
+	const [filePreview, setFilePreview] = useState('');
 	const [file, setFile] = useState();
 	const handleImagePreview = useCallback((e: any) => {
 		if (e.target.files) {
@@ -31,21 +29,23 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 		register,
 		handleSubmit,
 		reset,
-		setValue,
 		formState: { errors },
-	} = useForm<FieldValues>({});
-
-	useEffect(() => {
-		reset({
-			...rowData,
-		});
-		setFilePreview(rowData?.avatar || '');
-	}, [rowData, reset]);
+	} = useForm<FieldValues>({
+		defaultValues: {
+			name: '',
+			age: 0,
+			animalType: '',
+			gender: '',
+			ownerId: '',
+			species: '',
+		},
+	});
 
 	const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
 		event?.preventDefault();
+		let imgUrl = '';
+		setIsLoading(true);
 		try {
-			setIsLoading(true);
 			if (file) {
 				const apiEndpoint =
 					'http://bezubaan-nest-env.eba-4xmi8md6.ap-south-1.elasticbeanstalk.com/api/uploads';
@@ -60,23 +60,21 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 						},
 					}
 				);
-				if (response)
-					setValue('avatar', response.data, {
-						shouldDirty: true,
-						shouldValidate: true,
-						shouldTouch: true,
-					});
+				if (response) imgUrl = response.data;
 			}
-
-			await axios.put(`/api/users/${rowData?.id}`, data);
+			await axios.post('/api/pets', {
+				...data,
+				image: imgUrl,
+				age: parseInt(data.age),
+			});
 			setFilePreview('');
 			setFile(undefined);
 			reset();
-			getUsers();
-			userModal.onClose();
-			toast.success('User updated successfully.');
+			getPets();
+			petModal.onClose();
+			toast.success('Pet created successfully.');
 		} catch (error) {
-			toast.error('There was an error updating this user.');
+			toast.error('There was an error creating this pet.');
 			console.log(errors);
 		}
 		setIsLoading(false);
@@ -102,38 +100,56 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 			</div>
 			<div className='flex justify-between gap-4 w-full'>
 				<Input
-					id='email'
+					id='name'
 					register={register}
 					errors={errors}
-					type='email'
-					placeholder='someone@mail.com'
-					label='Email'
+					type='text'
+					placeholder='Thomas'
+					label='Name'
 					required={true}
-					value={rowData?.email}
 				/>
 				<Input
-					id='password'
+					id='age'
 					register={register}
 					errors={errors}
-					type='password'
-					placeholder='********'
-					label='Password'
+					type='text'
+					placeholder='10'
+					label='Age'
 					required={true}
-					value={rowData?.password}
 				/>
 			</div>
 			<div className='flex justify-between gap-10 w-full'>
 				<Input
-					id='username'
+					id='animalType'
 					register={register}
 					errors={errors}
 					type='text'
-					placeholder='JohnDoe'
-					label='Username'
+					placeholder='Cat / Dog'
+					label='Animal Type'
 					required
-					value={rowData?.username}
+					select
+					options={AnimalType}
+					className='flex-1'
 				/>
-				<div className='flex gap-2 w-full'>
+				<Input
+					id='species'
+					register={register}
+					errors={errors}
+					label='Species'
+					type='text'
+				/>
+			</div>
+			<div className='flex gap-10 w-full'>
+				<Input
+					id='ownerId'
+					register={register}
+					errors={errors}
+					label='Owner ID'
+					type='text'
+					placeholder='1998x5ghbc*a2hhn'
+				/>
+
+				<div className='flex gap-2 flex-1'>
 					<Input
 						id='gender'
 						register={register}
@@ -142,7 +158,6 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 						type='radio'
 						smallLabel='Male'
 						value='male'
-						checked={rowData?.gender === 'male'}
 					/>
 					<Input
 						id='gender'
@@ -153,44 +168,8 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 						smallLabel='Female'
 						value='female'
 						labelVisibility
-						checked={rowData?.gender === 'female'}
-					/>
-					<Input
-						id='gender'
-						label='other'
-						type='radio'
-						disabled={isLoading}
-						register={register}
-						errors={errors}
-						smallLabel='Other'
-						value='other'
-						labelVisibility
-						checked={rowData?.gender === 'other'}
 					/>
 				</div>
-			</div>
-			<div className='flex gap-2 w-full'>
-				<Input
-					id='isAdmin'
-					register={register}
-					errors={errors}
-					label='Admin'
-					type='radio'
-					smallLabel='Yes'
-					value={true}
-					checked={rowData?.isAdmin === true}
-				/>
-				<Input
-					id='isAdmin'
-					label='no'
-					register={register}
-					type='radio'
-					errors={errors}
-					smallLabel='No'
-					value={false}
-					labelVisibility
-					checked={rowData?.isAdmin === false}
-				/>
 			</div>
 		</div>
 	);
@@ -202,13 +181,16 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 				<Button
 					primary={false}
 					outline
-					onClick={userModal.onClose}
+					onClick={petModal.onClose}
 					title='Cancel'
+					disabled={isLoading}
 				/>
 				<Button
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
-					title='Update'
+					title='Create'
+					disabled={isLoading}
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>
@@ -219,11 +201,11 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 			footer={footerContent}
 			body={bodyContent}
 			disabled={isLoading}
-			isOpen={userModal.isOpen}
-			title='Add User'
-			onClose={userModal.onClose}
+			isOpen={petModal.isOpen}
+			title='Add Pet'
+			onClose={petModal.onClose}
 		/>
 	);
 };
 
-export default UpdateUserModal;
+export default CreatePetModal;

@@ -47,3 +47,9 @@ export enum University {
 	GovernmentCollegeUniversityFaisalabad = 'Government College University, Faisalabad',
 	Other = 'Other',
 }
+
+export enum AnimalType {
+	TYPE = 'type',
+	CAT = 'cat',
+	DOG = 'dog',
+}
