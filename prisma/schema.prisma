@@ -7,6 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model appointments {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int      @map("__v")
+  amount          Int
+  appointmentDate DateTime @db.Date
+  createdAt       DateTime @db.Date
+  paymentStatus   String
+  petId           String   @db.ObjectId
+  status          String
+  type            String
+  updatedAt       DateTime @db.Date
+  userId          String   @db.ObjectId
+  vetId           String   @db.ObjectId
+      user   users   @relation(fields: [userId], references: [id])
+      pet    pets   @relation(fields: [petId], references: [id])
+      vet    vets   @relation(fields: [vetId], references: [id])
+
+
+}
+
 model pets {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   v          Int      @map("__v")
@@ -19,28 +39,32 @@ model pets {
   ownerId    String   @db.ObjectId
   species    String
   updatedAt  DateTime @db.Date
-  owner users @relation(fields: [ownerId], references: [id], onDelete:Cascade)
+      user   users   @relation(fields: [ownerId], references: [id])
+  appointments appointments[]
+      
 }
 
 model users {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  v         Int      @map("__v")
+  v         Int     @map("__v")
+  avatar    String?
   createdAt DateTime @db.Date
-  email     String   @unique
+  email     String  @unique
   gender    String
   isAdmin   Boolean
   password  String
   updatedAt DateTime @db.Date
   username  String   @unique(map: "username_1")
-  avatar    String?
-  pets      pets[]
+  pets       pets[]
+  appointments appointments[]
+
 }
 
 model vets {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  v                 Int      @map("__v")
-  createdAt         DateTime @db.Date
+  v                 Int     @map("__v")
   avatar            String?
+  createdAt         DateTime @db.Date
   degreeImage       String
   email             String   @unique
   fieldOfStudy      String
@@ -53,4 +77,5 @@ model vets {
   updatedAt         DateTime @db.Date
   username          String   @unique(map: "username_1")
   yearsOfExperience Int
+  appointments appointments[]
 }

@@ -1,6 +1,11 @@
 'use client';
-import { SafePet, SafeUser, SafeVet } from '@/app/types';
-import { tablePetsSchema, tableUsersSchema, tableVetsSchema } from '@/data';
+import { SafeAppointment, SafePet, SafeUser, SafeVet } from '@/app/types';
+import {
+	tableAppointmentsSchema,
+	tablePetsSchema,
+	tableUsersSchema,
+	tableVetsSchema,
+} from '@/data';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTable } from 'react-table';
 import { RiDeleteBin6Line } from 'react-icons/ri';
@@ -16,9 +21,11 @@ interface TableProps {
 	users?: SafeUser[] | null;
 	pets?: SafePet[] | null;
 	vets?: SafeVet[] | null;
+	appointments?: SafeAppointment[] | null;
 	isUsersTable?: boolean;
 	isVetsTable?: boolean;
 	isPetsTable?: boolean;
+	isAppointmentsTable?: boolean;
 	deleteRow: (id: string) => void;
 	updateRow: (data: any) => void;
 }
@@ -27,9 +34,11 @@ const Table: React.FC<TableProps> = ({
 	users,
 	vets,
 	pets,
+	appointments,
 	isUsersTable,
 	isPetsTable,
 	isVetsTable,
+	isAppointmentsTable,
 	deleteRow,
 	updateRow,
 }) => {
@@ -47,10 +56,22 @@ const Table: React.FC<TableProps> = ({
 		} else if (isPetsTable) {
 			setPlaceholder('Enter ID, name or owner ID of a pet');
 			return pets;
+		} else if (isAppointmentsTable) {
+			setPlaceholder('Enter ID, vet ID or owner ID or pet ID ');
+			return appointments;
 		} else {
 			return [];
 		}
-	}, [pets, users, vets, isPetsTable, isVetsTable, isUsersTable]);
+	}, [
+		pets,
+		users,
+		vets,
+		appointments,
+		isPetsTable,
+		isVetsTable,
+		isUsersTable,
+		isAppointmentsTable,
+	]);
 	const [queriedData, setQueriedData] = useState(data);
 	const [inputFocused, setInputFocused] = useState(false);
 	const columns = useMemo(() => {
@@ -60,10 +81,12 @@ const Table: React.FC<TableProps> = ({
 			return tablePetsSchema;
 		} else if (isVetsTable) {
 			return tableVetsSchema;
+		} else if (isAppointmentsTable) {
+			return tableAppointmentsSchema;
 		} else {
 			return [];
 		}
-	}, [isPetsTable, isVetsTable, isUsersTable]);
+	}, [isPetsTable, isVetsTable, isUsersTable, isAppointmentsTable]);
 
 	const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const query = e.target.value.toLowerCase();
@@ -98,6 +121,16 @@ const Table: React.FC<TableProps> = ({
 						pet.id.toLowerCase().includes(query)
 				);
 				setQueriedData(filteredData);
+			} else if (isAppointmentsTable && data) {
+				//@ts-ignore
+				const filteredData = data.filter(
+					(appointment: SafeAppointment) =>
+						appointment.id.toLowerCase().includes(query) ||
+						appointment.petId.toLowerCase().includes(query) ||
+						appointment.userId.toLowerCase().includes(query) ||
+						appointment.vetId.toLowerCase().includes(query)
+				);
+				setQueriedData(filteredData);
 			}
 		}
 	};
@@ -126,21 +159,23 @@ const Table: React.FC<TableProps> = ({
 					onChange={onSearch}
 				/>
 			</div>
-			<div className='flex gap-2 justify-end'>
-				<Button
-					primary={false}
-					dark
-					icon={<FaPlus />}
-					onClick={
-						isUsersTable
-							? userModal.onOpen
-							: isPetsTable
-							? petModal.onOpen
-							: vetModal.onOpen
-					}
-					title={`Add ${isUsersTable ? 'User' : isVetsTable ? 'Vet' : 'Pet'}`}
-				/>
-			</div>
+			{!isAppointmentsTable && (
+				<div className='flex gap-2 justify-end'>
+					<Button
+						primary={false}
+						dark
+						icon={<FaPlus />}
+						onClick={
+							isUsersTable
+								? userModal.onOpen
+								: isPetsTable
+								? petModal.onOpen
+								: vetModal.onOpen
+						}
+						title={`Add ${isUsersTable ? 'User' : isVetsTable ? 'Vet' : 'Pet'}`}
+					/>
+				</div>
+			)}
 			<div
 				className={`${
 					queriedData.length === 0 ? 'h-auto overflow-hidden' : 'h-[50vh]'
@@ -159,7 +194,7 @@ const Table: React.FC<TableProps> = ({
 									{headerGroup.headers.map((column) => (
 										<React.Fragment key={column.id}>
 											<th
-												className='p-4 bg-neutral-200 first:rounded-tl-lg'
+												className='p-4 bg-neutral-200 first:rounded-tl-lg whitespace-nowrap'
 												{...column.getHeaderProps()}
 											>
 												{column.render('Header')}

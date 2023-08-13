@@ -19,7 +19,7 @@ export const authOptions: AuthOptions = {
 					if (!credentials?.email || !credentials.password) {
 						throw new Error('Invalid credentials');
 					}
-					const user = await prisma.users.findUnique({
+					const user = await prisma.users.findFirst({
 						where: {
 							email: credentials.email,
 						},
@@ -48,6 +48,7 @@ export const authOptions: AuthOptions = {
 	debug: process.env.NODE_ENV != 'development',
 	session: {
 		strategy: 'jwt',
+		maxAge: 1800,
 	},
 	secret: process.env.NEXT_AUTH_SECRET,
 };

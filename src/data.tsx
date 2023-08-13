@@ -3,7 +3,6 @@ import { MdSpaceDashboard, MdNotifications } from 'react-icons/md';
 import { FaUsers } from 'react-icons/fa';
 import { FaUserDoctor } from 'react-icons/fa6';
 import { BiSolidDog, BiSolidTimeFive, BiSolidLogOut } from 'react-icons/bi';
-import { BsFileBarGraphFill } from 'react-icons/bs';
 import { IoSettingsSharp } from 'react-icons/io5';
 import { SafePet } from './app/types';
 import moment from 'moment-timezone';
@@ -24,7 +23,6 @@ export const SidebarItems: {
 	{ title: 'Appointments', icon: BiSolidTimeFive },
 	{ title: 'Admin Tools', isHeading: true },
 	{ title: 'Notifications', icon: MdNotifications },
-	// { title: 'Analytics', icon: BsFileBarGraphFill },
 	{ title: 'Settings', icon: IoSettingsSharp },
 	{ title: 'Logout', icon: BiSolidLogOut },
 ];
@@ -242,5 +240,136 @@ export const tableVetsSchema: {
 		accessor: 'createdAt',
 		Cell: ({ value }) =>
 			moment.tz(value, 'Asia/Karachi').format('DD-MM-YYYY | hh:mm:ss A'),
+	},
+];
+
+export const tableAppointmentsSchema: {
+	Header: string;
+	accessor: string;
+	className?: string;
+	Cell?: (value: any) => void;
+}[] = [
+	{
+		Header: 'Appointment ID',
+		accessor: 'id',
+	},
+	{
+		Header: 'Appointment Date | Time',
+		accessor: 'appointmentDate',
+		Cell: ({ value }) =>
+			moment.tz(value, 'Asia/Karachi').format('DD-MM-YYYY | hh:mm:ss A'),
+	},
+	{
+		Header: 'Type',
+		accessor: 'type',
+		Cell: ({ value }) => {
+			if (value === 'physical') {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(207, 240, 221)',
+							color: 'rgb(27, 163, 106)',
+						}}
+						className='font-medium px-6 py-2 rounded-xl'
+					>
+						Physical
+					</span>
+				);
+			} else {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(207, 230, 253)',
+							color: 'rgb(0, 102, 204)',
+						}}
+						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+					>
+						Virtual
+					</span>
+				);
+			}
+		},
+	},
+	{
+		Header: 'Status',
+		accessor: 'status',
+		Cell: ({ value }) => {
+			if (value === 'pending') {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(255, 236, 160)',
+							color: 'rgb(255, 167, 38)',
+						}}
+						className='font-medium px-6 py-2 rounded-xl'
+					>
+						Pending
+					</span>
+				);
+			} else if (value === 'done') {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(207, 240, 221)',
+							color: 'rgb(27, 163, 106)',
+						}}
+						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+					>
+						Done
+					</span>
+				);
+			} else {
+				<span
+					style={{
+						backgroundColor: 'rgb(242, 205, 211)',
+						color: 'rgb(244, 63, 94)',
+					}}
+					className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+				>
+					Cancelled
+				</span>;
+			}
+		},
+	},
+	{
+		Header: 'User ID',
+		accessor: 'userId',
+	},
+	{ Header: 'Pet ID', accessor: 'petId' },
+	{ Header: 'Vet ID', accessor: 'vetId' },
+	{
+		Header: 'Amount',
+		accessor: 'amount',
+	},
+	{
+		Header: 'Payment Status',
+		accessor: 'paymentStatus',
+		Cell: ({ value }) => {
+			if (value === 'unpaid') {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(255, 236, 160)',
+							color: 'rgb(255, 167, 38)',
+						}}
+						className='font-medium px-6 py-2 rounded-xl'
+					>
+						Unpaid
+					</span>
+				);
+			} else {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(207, 240, 221)',
+							color: 'rgb(27, 163, 106)',
+						}}
+						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+					>
+						Paid
+					</span>
+				);
+			}
+		},
 	},
 ];

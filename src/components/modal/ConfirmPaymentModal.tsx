@@ -1,38 +1,36 @@
 'use client';
 import React, { useCallback } from 'react';
 import Modal from './Modal';
-import useConfirmModal from '@/hooks/useConfirmModal';
 import Button from '../button/Button';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import useUpdateAppointmentModal from '@/hooks/useUpdateAppointmentModal';
 
-interface ConfirmModalProps {
+interface ConfirmPaymentModalProps {
 	heading: string;
 	description: string;
 	fetchData: () => void;
 	rowId: string;
-	type: 'users' | 'vets' | 'pets' | 'appointments';
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
+const ConfirmPaymentModal: React.FC<ConfirmPaymentModalProps> = ({
 	heading,
 	description,
 	fetchData,
 	rowId,
-	type,
 }) => {
-	const confirmModal = useConfirmModal();
-	const deleteRow = useCallback(async () => {
+	const confirmModal = useUpdateAppointmentModal();
+	const updateRow = useCallback(async () => {
 		try {
-			await axios.delete(`/api/${type}/${rowId}`);
+			await axios.put(`/api/appointments/${rowId}`, { paymentStatus: 'paid' });
 			fetchData();
 			confirmModal.onClose();
-			toast.success('Row deleted successfully.');
+			toast.success('Row updated successfully.');
 		} catch (error) {
 			console.log(error);
-			toast.error('There was an error deleting the row.');
+			toast.error('There was an error updating this appointment.');
 		}
-	}, [rowId, fetchData, type, confirmModal]);
+	}, [rowId, fetchData, confirmModal]);
 	const bodyContent = <div>{description}</div>;
 	const footerContent = (
 		<div className='flex flex-col gap-4'>
@@ -44,7 +42,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 					onClick={confirmModal.onClose}
 					title='Cancel'
 				/>
-				<Button primary={false} red onClick={deleteRow} title='Delete' />
+				<Button primary onClick={updateRow} title='Confirm' />
 			</div>
 		</div>
 	);
@@ -60,4 +58,4 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 	);
 };
 
-export default ConfirmModal;
+export default ConfirmPaymentModal;

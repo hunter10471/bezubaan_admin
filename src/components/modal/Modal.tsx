@@ -10,6 +10,7 @@ interface ModalProps {
 	body?: JSX.Element;
 	footer?: JSX.Element;
 	disabled?: boolean;
+	small?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -19,17 +20,9 @@ const Modal: React.FC<ModalProps> = ({
 	body,
 	footer,
 	disabled,
+	small,
 }) => {
 	const [showModal, setShowModal] = useState(isOpen);
-	const handleClose = useCallback(() => {
-		if (disabled) {
-			return;
-		}
-		setShowModal(false);
-		setTimeout(() => {
-			onClose();
-		}, 300);
-	}, [disabled, onClose]);
 
 	useEffect(() => {
 		setShowModal(isOpen);
@@ -62,13 +55,15 @@ const Modal: React.FC<ModalProps> = ({
 								<div className='text-lg font-semibold '>{title}</div>
 							</div>
 							{/* BODY */}
-							<div className='relative p-6 flex-auto h-[400px] overflow-y-scroll'>
+							<div
+								className={`relative p-6 flex-auto ${
+									small ? 'h-auto' : 'h-[400px]'
+								} overflow-y-scroll`}
+							>
 								{body}
 							</div>
 							{/* FOOTER */}
-							<div className='flex flex-col gap-2 p-6 shadow-inner'>
-								{footer}
-							</div>
+							<div className='flex flex-col gap-2 p-6'>{footer}</div>
 						</form>
 					</div>
 				</div>

@@ -8,7 +8,7 @@ import Input from '../Input/Input';
 import { FiPlus } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { University } from '@/common/enum';
+import { FieldOfStudy, University } from '@/common/enum';
 
 interface CreateVetModalProps {
 	getVets: () => void;
@@ -241,7 +241,8 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					errors={errors}
 					label='Field Of Study'
 					type='text'
-					placeholder='Veterinary Medicine'
+					select
+					options={FieldOfStudy}
 				/>
 			</div>
 			<div className='flex justify-between w-full'>
