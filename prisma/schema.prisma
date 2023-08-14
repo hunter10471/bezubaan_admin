@@ -17,6 +17,8 @@ model appointments {
   petId           String   @db.ObjectId
   status          String
   type            String
+  rating          Int
+  review          String
   updatedAt       DateTime @db.Date
   userId          String   @db.ObjectId
   vetId           String   @db.ObjectId
@@ -55,6 +57,8 @@ model users {
   password  String
   updatedAt DateTime @db.Date
   username  String   @unique(map: "username_1")
+  lat       String
+  long      String
   pets       pets[]
   appointments appointments[]
 
@@ -77,5 +81,11 @@ model vets {
   updatedAt         DateTime @db.Date
   username          String   @unique(map: "username_1")
   yearsOfExperience Int
+  licenseNumber     String
+  address           String
+  clinicName        String
+  lat               String
+  long              String
+  description       String
   appointments appointments[]
 }

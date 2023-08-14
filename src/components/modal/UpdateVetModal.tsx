@@ -161,6 +161,7 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 					type='password'
 					placeholder='********'
 					label='Password'
+					value={''}
 				/>
 			</div>
 			<div className='flex justify-between gap-10 w-full items-center'>
@@ -274,6 +275,37 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 					fullWidth
 					className='min-w-[400px]'
 					value={rowData?.specializations.join(', ')}
+				/>
+			</div>
+			<div className='flex justify-between gap-10 w-full items-center'>
+				<Input
+					id='clinicName'
+					register={register}
+					errors={errors}
+					label='Clinic Name'
+					type='text'
+					value={rowData?.clinicName}
+				/>
+				<Input
+					id='licenseNumber'
+					register={register}
+					errors={errors}
+					label='License Number'
+					type='text'
+					value={rowData?.licenseNumber}
+				/>
+			</div>
+			<div className='flex justify-between w-full'>
+				<Input
+					id='address'
+					register={register}
+					errors={errors}
+					label='Address'
+					type='text'
+					placeholder='15-A, Street#A, City'
+					fullWidth
+					className='min-w-[400px]'
+					value={rowData?.address}
 				/>
 			</div>
 			<div className='w-full flex justify-between gap-10'>

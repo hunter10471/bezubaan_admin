@@ -141,7 +141,7 @@ const Table: React.FC<TableProps> = ({
 
 	const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
 		//@ts-ignore
-		useTable({ columns, data: [...queriedData] });
+		useTable({ columns, data: Array.isArray(queriedData) ? queriedData : [] });
 	return (
 		<div className='w-[70vw] '>
 			<div
@@ -178,7 +178,9 @@ const Table: React.FC<TableProps> = ({
 			)}
 			<div
 				className={`${
-					queriedData.length === 0 ? 'h-auto overflow-hidden' : 'h-[50vh]'
+					!queriedData || queriedData?.length === 0
+						? 'h-auto overflow-hidden'
+						: 'h-[50vh]'
 				} overflow-y-scroll w-full ${
 					isUsersTable || isPetsTable ? 'overflow-x-hidden' : ''
 				}`}
@@ -258,7 +260,7 @@ const Table: React.FC<TableProps> = ({
 					</tbody>
 				</table>
 			</div>
-			{queriedData?.length === 0 && <NoData />}
+			{(!queriedData || queriedData?.length === 0) && <NoData />}
 		</div>
 	);
 };

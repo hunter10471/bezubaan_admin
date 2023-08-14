@@ -236,6 +236,18 @@ export const tableVetsSchema: {
 		},
 	},
 	{
+		Header: 'License Number',
+		accessor: 'licenseNumber',
+	},
+	{
+		Header: 'Clinic Name',
+		accessor: 'clinicName',
+	},
+	{
+		Header: 'Address',
+		accessor: 'address',
+	},
+	{
 		Header: 'Created Date',
 		accessor: 'createdAt',
 		Cell: ({ value }) =>

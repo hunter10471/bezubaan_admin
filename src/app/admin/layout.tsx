@@ -4,6 +4,8 @@ import getCurrentUser from '../actions/getCurrentUser';
 import { redirect } from 'next/navigation';
 import Heading from '@/components/heading/Heading';
 import ToasterProvider from '../Providers/ToasterProvider';
+import blob from '../../../public/blob.svg';
+import Image from 'next/image';
 
 const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] });
 
@@ -23,15 +25,22 @@ export default async function RootLayout({
 	} else
 		return (
 			<html lang='en'>
-				<body className={roboto.className}>
+				<body className={`${roboto.className} w-screen overflow-x-hidden`}>
 					<ToasterProvider />
 					<div className='flex relative'>
 						<Sidebar />
-						<div className='w-full min-h-screen text-neutral-800 p-8 pl-[300px]'>
+						<div className='min-h-screen text-neutral-800 p-8 pl-[300px]'>
 							<Heading title='Dashboard' checkPath />
 							<br />
 							{children}
 						</div>
+						<Image
+							src={blob}
+							width={350}
+							height={350}
+							alt='blob'
+							className='absolute bottom-[-50px] right-[-50px] opacity-10 -z-10'
+						/>
 					</div>
 				</body>
 			</html>

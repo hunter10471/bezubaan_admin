@@ -179,6 +179,24 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					labelVisibility
 				/>
 			</div>
+			<div className='flex gap-2 w-full'>
+				<Input
+					id='lat'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='33.77'
+					label='Latitude'
+				/>
+				<Input
+					id='long'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='128.88'
+					label='Longitude'
+				/>
+			</div>
 		</div>
 	);
 

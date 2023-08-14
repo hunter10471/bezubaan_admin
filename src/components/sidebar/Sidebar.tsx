@@ -5,6 +5,8 @@ import SidebarHeading from './SidebarHeading';
 import SidebarItem from './SidebarItem';
 import { SidebarItems } from '@/data';
 import { usePathname } from 'next/navigation';
+import blob from '../../../public/blob.svg';
+import Image from 'next/image';
 
 const Sidebar = () => {
 	const pathname = usePathname();
@@ -15,7 +17,7 @@ const Sidebar = () => {
 		}
 	}, [pathname, currentPath]);
 	return (
-		<div className='fixed w-[250px] p-6 bg-white h-screen overflow-y-hidden shadow-xl'>
+		<div className='fixed w-[250px] p-6 bg-white h-screen overflow-hidden shadow-xl'>
 			<Logo />
 			<ul className='my-10'>
 				{SidebarItems.map((item) =>
@@ -31,6 +33,20 @@ const Sidebar = () => {
 					)
 				)}
 			</ul>
+			<Image
+				src={blob}
+				width={200}
+				height={200}
+				alt='blob'
+				className='absolute top-[20%] right-[-50px] opacity-10 -z-10'
+			/>
+			<Image
+				src={blob}
+				width={200}
+				height={200}
+				alt='blob'
+				className='absolute bottom-[-50px] left-[-50px] opacity-10 -z-10'
+			/>
 		</div>
 	);
 };

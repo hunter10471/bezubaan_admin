@@ -55,6 +55,9 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 			isApproved: false,
 			fieldOfStudy: '',
 			university: '',
+			address: '',
+			clinicName: '',
+			licenseNumber: '',
 		},
 	});
 
@@ -257,6 +260,36 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					className='min-w-[400px]'
 				/>
 			</div>
+			<div className='flex justify-between gap-10 w-full items-center'>
+				<Input
+					id='clinicName'
+					register={register}
+					errors={errors}
+					label='Clinic Name'
+					type='text'
+					placeholder='XYZ'
+				/>
+				<Input
+					id='licenseNumber'
+					register={register}
+					errors={errors}
+					label='License Number'
+					type='text'
+					placeholder='ABC12345'
+				/>
+			</div>
+			<div className='flex justify-between w-full'>
+				<Input
+					id='address'
+					register={register}
+					errors={errors}
+					label='Address'
+					type='text'
+					placeholder='15-A, Street#A, City'
+					fullWidth
+					className='min-w-[400px]'
+				/>
+			</div>
 			<div className='w-full flex justify-between gap-10'>
 				<div className='w-full'>
 					<label htmlFor='file1'>
@@ -310,6 +343,7 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
 					title='Create'
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>
