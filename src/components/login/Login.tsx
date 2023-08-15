@@ -29,16 +29,17 @@ const Login = () => {
 		signIn('credentials', {
 			...data,
 			redirect: false,
-		}).then((callback) => {
-			if (callback?.ok) {
-				toast.success('Logged in');
-				router.push('/Admin/Dashboard');
-			}
-			if (callback?.error) {
-				toast.error('There was an error logging you in');
-			}
-		});
-		setIsLoading(false);
+		})
+			.then((callback) => {
+				if (callback?.ok) {
+					toast.success('Logged in');
+					router.push('/Admin/Dashboard');
+				}
+				if (callback?.error) {
+					toast.error('There was an error logging you in');
+				}
+			})
+			.finally(() => setIsLoading(false));
 	};
 	return (
 		<div className='flex h-full items-center justify-center bg-login-background '>

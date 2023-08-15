@@ -93,11 +93,16 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 				acc[id] = file;
 				return acc;
 			}, {});
+			const { lat, long, ...others } = data;
 			await axios.post('/api/vets', {
-				...data,
+				...others,
 				...transformedFiles,
-				specializations: data.specializations.split(','),
-				yearsOfExperience: parseInt(data.yearsOfExperience),
+				location: {
+					type: 'Point',
+					coordinates: [parseFloat(lat), parseFloat(long)],
+				},
+				specializations: others.specializations.split(','),
+				yearsOfExperience: parseInt(others.yearsOfExperience),
 			});
 			setFilePreview('');
 			setFile(null);
@@ -286,6 +291,36 @@ const CreateVetModal: React.FC<CreateVetModalProps> = ({ getVets }) => {
 					label='Address'
 					type='text'
 					placeholder='15-A, Street#A, City'
+					fullWidth
+					className='min-w-[400px]'
+				/>
+			</div>
+			<div className='flex gap-2 w-full'>
+				<Input
+					id='lat'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='33.77'
+					label='Latitude'
+				/>
+				<Input
+					id='long'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='128.88'
+					label='Longitude'
+				/>
+			</div>
+			<div className='flex justify-between w-full'>
+				<Input
+					id='description'
+					register={register}
+					errors={errors}
+					label='Description'
+					type='text'
+					placeholder='The new vet clinic'
 					fullWidth
 					className='min-w-[400px]'
 				/>

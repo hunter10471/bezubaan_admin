@@ -63,7 +63,16 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 				);
 				if (response) imgUrl = response.data;
 			}
-			await axios.post('/api/users', { ...data, avatar: imgUrl });
+			const { lat, long, ...others } = data;
+
+			await axios.post('/api/users', {
+				...others,
+				avatar: imgUrl,
+				location: {
+					type: 'Point',
+					coordinates: [parseFloat(lat), parseFloat(long)],
+				},
+			});
 			setFilePreview('');
 			setFile(undefined);
 			reset();
@@ -214,6 +223,7 @@ const UserModal: React.FC<UserModalProps> = ({ getUsers }) => {
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
 					title='Create'
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>

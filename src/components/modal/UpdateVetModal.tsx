@@ -76,7 +76,7 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 
 		try {
 			setIsLoading(true);
-			if (file && file1 && file2) {
+			if (file || file1 || file2) {
 				const apiEndpoint =
 					'http://bezubaan-nest-env.eba-4xmi8md6.ap-south-1.elasticbeanstalk.com/api/uploads';
 				files = [
@@ -85,29 +85,38 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 					{ file: file2, id: 'licenseImage' },
 				];
 				for (const image of files) {
-					const formData = new FormData();
-					formData.append('file', image.file);
-					const response: any = await axios.post<string, null>(
-						apiEndpoint,
-						formData,
-						{
-							headers: {
-								'Content-Type': 'multipart/form-data',
-							},
-						}
-					);
-					if (response) (image.file as any) = response.data;
+					if (image.file) {
+						const formData = new FormData();
+						formData.append('file', image.file);
+						const response: any = await axios.post<string, null>(
+							apiEndpoint,
+							formData,
+							{
+								headers: {
+									'Content-Type': 'multipart/form-data',
+								},
+							}
+						);
+						if (response) (image.file as any) = response.data;
+					}
 				}
+				files = files.filter((item) => item.file);
 				transformedFiles = files.reduce((acc, { file, id }) => {
 					acc[id] = file;
 					return acc;
 				}, {});
 			}
+
+			const { lat, long, ...others } = data;
 			await axios.put(`/api/vets/${rowData?.id}`, {
-				...data,
+				...others,
 				...transformedFiles,
-				specializations: data.specializations.split(','),
-				yearsOfExperience: parseInt(data.yearsOfExperience),
+				location: {
+					type: 'Point',
+					coordinates: [parseFloat(lat), parseFloat(long)],
+				},
+				specializations: others.specializations.split(','),
+				yearsOfExperience: parseInt(others.yearsOfExperience),
 			});
 			setFilePreview('');
 			setFile(null);
@@ -117,13 +126,13 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 			setFile2(null);
 			reset();
 			getVets();
+			setIsLoading(false);
 			UpdateVetModal.onClose();
 			toast.success('Vet updated successfully.');
 		} catch (error) {
 			toast.error('There was an error updating this vet.');
 			console.log(errors);
 		}
-		setIsLoading(false);
 	};
 
 	const bodyContent = (
@@ -308,6 +317,41 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 					value={rowData?.address}
 				/>
 			</div>
+			<div className='flex gap-2 w-full'>
+				<Input
+					id='lat'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='33.77'
+					label='Latitude'
+					//@ts-ignore
+					value={rowData?.location.coordinates[0]}
+				/>
+				<Input
+					id='long'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='128.88'
+					label='Longitude'
+					//@ts-ignore
+					value={rowData?.location.coordinates[1]}
+				/>
+			</div>
+			<div className='flex justify-between w-full'>
+				<Input
+					id='description'
+					register={register}
+					errors={errors}
+					label='Description'
+					type='text'
+					placeholder='The new vet clinic'
+					fullWidth
+					className='min-w-[400px]'
+					value={rowData?.description}
+				/>
+			</div>
 			<div className='w-full flex justify-between gap-10'>
 				<div className='w-full'>
 					<label htmlFor='file1'>
@@ -361,6 +405,7 @@ const UpdateVetModal: React.FC<UpdateVetModalProps> = ({
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
 					title='Update'
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>

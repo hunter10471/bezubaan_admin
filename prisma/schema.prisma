@@ -57,8 +57,7 @@ model users {
   password  String
   updatedAt DateTime @db.Date
   username  String   @unique(map: "username_1")
-  lat       String
-  long      String
+  location  Json
   pets       pets[]
   appointments appointments[]
 
@@ -84,8 +83,8 @@ model vets {
   licenseNumber     String
   address           String
   clinicName        String
-  lat               String
-  long              String
+  location          Json
   description       String
+  fee               Int
   appointments appointments[]
 }

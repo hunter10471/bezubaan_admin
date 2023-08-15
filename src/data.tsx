@@ -21,9 +21,6 @@ export const SidebarItems: {
 	{ title: 'Vets', icon: FaUserDoctor },
 	{ title: 'Pets', icon: BiSolidDog },
 	{ title: 'Appointments', icon: BiSolidTimeFive },
-	{ title: 'Admin Tools', isHeading: true },
-	{ title: 'Notifications', icon: MdNotifications },
-	{ title: 'Settings', icon: IoSettingsSharp },
 	{ title: 'Logout', icon: BiSolidLogOut },
 ];
 
@@ -330,16 +327,18 @@ export const tableAppointmentsSchema: {
 						Done
 					</span>
 				);
-			} else {
-				<span
-					style={{
-						backgroundColor: 'rgb(242, 205, 211)',
-						color: 'rgb(244, 63, 94)',
-					}}
-					className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
-				>
-					Cancelled
-				</span>;
+			} else if (value === 'cancelled') {
+				return (
+					<span
+						style={{
+							backgroundColor: 'rgb(242, 205, 211)',
+							color: 'rgb(244, 63, 94)',
+						}}
+						className='bg-rose-200 text-rose-500  px-6 font-medium py-2 rounded-xl'
+					>
+						Cancelled
+					</span>
+				);
 			}
 		},
 	},

@@ -2,7 +2,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../button/Button';
-import useCreateUserModal from '@/hooks/useCreateUserModal';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '../Input/Input';
 import { FiPlus } from 'react-icons/fi';
@@ -44,6 +43,7 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 
 	const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
 		event?.preventDefault();
+		let imgUrl = '';
 		try {
 			setIsLoading(true);
 			if (file) {
@@ -60,15 +60,18 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 						},
 					}
 				);
-				if (response)
-					setValue('avatar', response.data, {
-						shouldDirty: true,
-						shouldValidate: true,
-						shouldTouch: true,
-					});
+				if (response) imgUrl = response.data;
+				console.log(imgUrl);
 			}
-
-			await axios.put(`/api/users/${rowData?.id}`, data);
+			const { lat, long, ...others } = data;
+			await axios.put(`/api/users/${rowData?.id}`, {
+				...others,
+				avatar: imgUrl,
+				location: {
+					type: 'Point',
+					coordinates: [parseFloat(lat), parseFloat(long)],
+				},
+			});
 			setFilePreview('');
 			setFile(undefined);
 			reset();
@@ -192,6 +195,28 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 					checked={rowData?.isAdmin === false}
 				/>
 			</div>
+			<div className='flex gap-2 w-full'>
+				<Input
+					id='lat'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='33.77'
+					label='Latitude'
+					//@ts-ignore
+					value={rowData?.location.coordinates[0]}
+				/>
+				<Input
+					id='long'
+					register={register}
+					errors={errors}
+					type='text'
+					placeholder='128.88'
+					label='Longitude'
+					//@ts-ignore
+					value={rowData?.location.coordinates[1]}
+				/>
+			</div>
 		</div>
 	);
 
@@ -209,6 +234,7 @@ const UpdateUserModal: React.FC<UserModalProps> = ({ getUsers, rowData }) => {
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
 					title='Update'
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>

@@ -195,6 +195,7 @@ const CreatePetModal: React.FC<UserModalProps> = ({ getPets, rowData }) => {
 					primary={true}
 					onClick={handleSubmit(onSubmit)}
 					title='Create'
+					isLoading={isLoading}
 				/>
 			</div>
 		</div>
